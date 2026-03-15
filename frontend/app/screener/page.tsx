@@ -81,7 +81,7 @@ function StockCard({ ticker, name, priceData }: { ticker: string; name: string; 
           FORECAST →
         </Link>
         <Link href={`/analyze/${ticker}`}
-          className="flex-1 text-center font-mono text-xs py-2.5 border border-[#1e1e1e] text-[#9b9895] hover:border-[#d4a847] hover:text-[#d4a847] transition-colors">
+          className="flex-1 text-center font-mono text-xs py-2.5 border border-[#1e1e1e] text-[#9b9895] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
           ANALYZE
         </Link>
       </div>
@@ -110,7 +110,7 @@ export default function ScreenerPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-[#f0ede8]">
       <header className="sticky top-0 bg-[#0a0a0a]/95 backdrop-blur border-b border-[#1e1e1e] px-8 py-4 flex items-center justify-between z-10">
         <div className="flex items-center gap-6">
-          <Link href="/" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] transition-colors">← STOCKSENSE</Link>
+        <Link href="/" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">← STOCKSENSE</Link>
         </div>
         <div className="font-mono text-sm">SCREENER</div>
       </header>

@@ -16,7 +16,7 @@ export default function WatchlistButton({ ticker }: WatchlistButtonProps) {
     if (user) {
       getWatchlist(user.uid)
         .then((list) => setInWatchlist(list.includes(ticker)))
-        .catch(() => {}) // silently ignore offline/network errors
+        .catch(() => {})
         .finally(() => setChecking(false))
     } else {
       setChecking(false)
@@ -47,9 +47,9 @@ export default function WatchlistButton({ ticker }: WatchlistButtonProps) {
     return (
       <button
         onClick={handleToggle}
-        className="px-4 py-2 border border-border hover:border-border-hover transition-colors font-mono text-xs"
+        className="w-full font-mono text-xs border border-[#1e1e1e] text-[#9b9895] px-4 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase"
       >
-        Sign in to save
+        SIGN IN TO SAVE
       </button>
     )
   }
@@ -57,13 +57,13 @@ export default function WatchlistButton({ ticker }: WatchlistButtonProps) {
   return (
     <button
       onClick={handleToggle}
-      className={`px-4 py-2 border transition-colors font-mono text-xs ${
+      className={`w-full font-mono text-xs px-4 py-3 transition-colors uppercase ${
         inWatchlist
-          ? "border-accent-green text-accent-green"
-          : "border-border hover:border-border-hover"
+          ? "bg-[#f0ede8] text-[#0a0a0a] hover:bg-white"
+          : "border border-[#1e1e1e] text-[#9b9895] hover:border-[#2a2a2a] hover:text-[#f0ede8]"
       }`}
     >
-      {inWatchlist ? "✓ Saved" : "＋ Add to Watchlist"}
+      {inWatchlist ? "✓ SAVED TO WATCHLIST" : "+ ADD TO WATCHLIST"}
     </button>
   )
 }

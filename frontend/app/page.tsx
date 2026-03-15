@@ -73,14 +73,14 @@ export default function HomePage() {
       <header className="p-6 flex justify-between items-center">
         <div className="font-mono text-sm tracking-wider">STOCKSENSE</div>
         <div className="flex items-center gap-6">
-          <Link href="/screener" className="font-mono text-xs text-muted hover:text-primary uppercase tracking-widest transition-colors">Screener</Link>
-          <Link href="/portfolio" className="font-mono text-xs text-muted hover:text-primary uppercase tracking-widest transition-colors">Portfolio</Link>
-          <Link href="/watchlist" className="font-mono text-xs text-muted hover:text-primary uppercase tracking-widest transition-colors">Watchlist</Link>
-          <Link href="/tools" className="font-mono text-xs text-muted hover:text-primary uppercase tracking-widest transition-colors">Tools</Link>
+          <Link href="/screener" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Screener</Link>
+          <Link href="/portfolio" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Portfolio</Link>
+          <Link href="/watchlist" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Watchlist</Link>
+          <Link href="/tools" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Tools</Link>
           {!user ? (
-            <button onClick={() => signInWithGoogle()} className="px-4 py-2 border border-border hover:border-border-hover transition-colors font-mono text-sm">Sign In</button>
+            <button onClick={() => signInWithGoogle()} className="px-4 py-2 border border-[#1e1e1e] text-[#9b9895] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors font-mono text-xs uppercase">Sign In</button>
           ) : (
-            <div className="text-sm text-muted">Welcome, {user.displayName}</div>
+            <div className="font-mono text-xs text-[#9b9895]">{user.displayName}</div>
           )}
         </div>
       </header>
@@ -133,7 +133,7 @@ export default function HomePage() {
           <div className="flex gap-3 flex-wrap">
             {quickPicks.map(t => (
               <button key={t} onClick={() => handleSelect(t)}
-                className="px-4 py-2 border border-border hover:border-border-hover transition-colors font-mono text-xs">
+                className="px-4 py-2 border border-[#1e1e1e] text-[#9b9895] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors font-mono text-xs uppercase">
                 {t}
               </button>
             ))}

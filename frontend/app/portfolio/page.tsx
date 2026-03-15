@@ -60,7 +60,7 @@ export default function PortfolioPage() {
     <main className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
       <div className="text-center">
         <p className="font-mono text-[#6b6966] mb-4">Sign in to track your portfolio</p>
-        <button onClick={() => signInWithGoogle()} className="font-mono text-sm border border-[#1e1e1e] px-6 py-3 hover:border-[#333] transition-colors text-[#f0ede8]">
+        <button onClick={() => signInWithGoogle()} className="font-mono text-sm border border-[#1e1e1e] text-[#9b9895] px-6 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
           SIGN IN WITH GOOGLE →
         </button>
       </div>
@@ -71,7 +71,7 @@ export default function PortfolioPage() {
     <main className="min-h-screen bg-[#0a0a0a] text-[#f0ede8] p-8 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <Link href="/" className="font-mono text-xs text-[#6b6966] hover:text-[#f0ede8] transition-colors">← STOCKSENSE</Link>
+          <Link href="/" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">← STOCKSENSE</Link>
           <div className="font-mono text-[10px] text-[#6b6966] uppercase tracking-[0.2em] mt-4">(01) PORTFOLIO</div>
           <h1 className="font-display text-5xl mt-1">My Holdings</h1>
         </div>
