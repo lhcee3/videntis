@@ -10,3 +10,17 @@
     @apply bg-bg text-primary;
   }
 }
+
+@keyframes tape {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-tape {
+  animation: tape 35s linear infinite;
+}
