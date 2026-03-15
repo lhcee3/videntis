@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+yfinance
+prophet
+vaderSentiment
+pydantic
+httpx
+python-dotenv
+feedparser
+pandas
+requests
