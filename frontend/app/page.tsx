@@ -301,18 +301,16 @@ export default function HomePage() {
           </div>
 
           {/* Stats row */}
-          <div className="flex items-center gap-0 border-t border-[#1e1e1e] pt-5">
-            <div className="flex items-baseline gap-1.5 pr-5">
+          <div className="flex items-center gap-8 pt-5">
+            <div className="flex items-baseline gap-1.5">
               <span className="font-mono text-sm text-[#f0ede8]">47</span>
               <span className="font-mono text-[10px] text-[#9ca3af]">stocks tracked</span>
             </div>
-            <div className="w-px h-4 bg-[#1e1e1e]" />
-            <div className="flex items-baseline gap-1.5 px-5">
+            <div className="flex items-baseline gap-1.5">
               <span className="font-mono text-sm text-[#f0ede8]">312</span>
               <span className="font-mono text-[10px] text-[#9ca3af]">forecasts run</span>
             </div>
-            <div className="w-px h-4 bg-[#1e1e1e]" />
-            <div className="flex items-baseline gap-1.5 pl-5">
+            <div className="flex items-baseline gap-1.5">
               <span className="font-mono text-sm text-[#f0ede8]">94.2%</span>
               <span className="font-mono text-[10px] text-[#9ca3af]">model accuracy</span>
             </div>
