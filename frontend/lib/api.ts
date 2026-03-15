@@ -23,3 +23,6 @@ export const analyzePortfolio = (holdings: { ticker: string; shares: number; buy
   })
 
 export const fetchTrending = () => apiFetch("/trending")
+
+export const fetchPrices = (tickers: string[]) =>
+  apiFetch(`/prices?tickers=${tickers.join(",")}`)
