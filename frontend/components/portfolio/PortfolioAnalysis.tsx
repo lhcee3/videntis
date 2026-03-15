@@ -16,3 +16,4 @@ export default function PortfolioAnalysis({ summary }: { summary: string }) {
     </div>
   )
 }
+

@@ -1,4 +1,4 @@
-# StockSense Setup Guide
+# Videntis Setup Guide
 
 ## Quick Start (2-3 Weeks Build Timeline)
 
@@ -6,7 +6,7 @@
 
 #### Day 1-2: Backend Foundation
 ```bash
-cd stocksense/backend
+cd Videntis/backend
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
@@ -32,7 +32,7 @@ curl http://localhost:8000/forecast/NVDA
 
 #### Day 1-2: Next.js Setup
 ```bash
-cd stocksense/frontend
+cd Videntis/frontend
 npm install
 npm run dev
 ```
@@ -51,7 +51,7 @@ Test with different tickers: NVDA, AAPL, TSLA, MSFT
 
 #### Day 1-2: Firebase Setup
 1. Go to https://console.firebase.google.com
-2. Create project "stocksense"
+2. Create project "Videntis"
 3. Enable Firestore (test mode)
 4. Enable Authentication → Google provider
 5. Get config from Project Settings → Web app
@@ -66,14 +66,14 @@ Test with different tickers: NVDA, AAPL, TSLA, MSFT
 **Backend (Render.com):**
 - Create new Web Service
 - Connect GitHub repo
-- Root directory: `stocksense/backend`
+- Root directory: `Videntis/backend`
 - Build command: `pip install -r requirements.txt`
 - Start command: `uvicorn main:app --host 0.0.0.0 --port 8000`
 - Add env var: `GROQ_API_KEY`
 
 **Frontend (Vercel):**
 - Import GitHub repo
-- Root directory: `stocksense/frontend`
+- Root directory: `Videntis/frontend`
 - Framework: Next.js
 - Add all `NEXT_PUBLIC_*` env vars
 - Set `NEXT_PUBLIC_API_URL` to your Render backend URL

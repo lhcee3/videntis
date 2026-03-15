@@ -1,6 +1,6 @@
-# StockSense Build Checklist
+# Videntis Build Checklist
 
-Use this checklist to track your progress building StockSense.
+Use this checklist to track your progress building Videntis.
 
 ## 📋 Pre-Build Setup
 
@@ -110,7 +110,7 @@ Use this checklist to track your progress building StockSense.
 - [ ] Render account created
 - [ ] New Web Service created
 - [ ] GitHub repo connected
-- [ ] Root directory set to `stocksense/backend`
+- [ ] Root directory set to `Videntis/backend`
 - [ ] Build command set
 - [ ] Start command set
 - [ ] `GROQ_API_KEY` environment variable added
@@ -123,7 +123,7 @@ Use this checklist to track your progress building StockSense.
 
 - [ ] Vercel account created
 - [ ] Project imported from GitHub
-- [ ] Root directory set to `stocksense/frontend`
+- [ ] Root directory set to `Videntis/frontend`
 - [ ] Framework preset set to Next.js
 - [ ] All `NEXT_PUBLIC_*` env vars added
 - [ ] `NEXT_PUBLIC_API_URL` set to Render backend URL
@@ -237,7 +237,7 @@ Idea 2:
 
 ---
 
-**Congratulations on completing StockSense!** 🎉
+**Congratulations on completing Videntis!** 🎉
 
 Share your project:
 - [ ] Twitter/X

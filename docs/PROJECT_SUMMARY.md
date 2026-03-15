@@ -1,4 +1,4 @@
-# StockSense — Project Summary
+# Videntis — Project Summary
 
 ## What You Built
 
@@ -26,7 +26,7 @@ A production-ready, full-stack AI-powered stock forecasting dashboard that costs
 ## Project Structure
 
 ```
-stocksense/
+Videntis/
 ├── backend/                    # FastAPI Python backend
 │   ├── main.py                # App entry + CORS
 │   ├── routers/
@@ -293,7 +293,7 @@ MIT License - Free to use, modify, and distribute
 
 ## Credits
 
-Built following the complete StockSense specification with:
+Built following the complete Videntis specification with:
 - Facebook Prophet for time series forecasting
 - Groq for LLM inference
 - Yahoo Finance for market data

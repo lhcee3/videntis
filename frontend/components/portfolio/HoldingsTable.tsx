@@ -51,3 +51,4 @@ export default function HoldingsTable({ holdings, analysisData, onRemove }: {
     </div>
   )
 }
+

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import forecast, sentiment, portfolio, analyze, trending, prices
 
-app = FastAPI(title="StockSense API")
+app = FastAPI(title="Videntis API")
 
 app.add_middleware(
     CORSMiddleware,

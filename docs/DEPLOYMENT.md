@@ -1,4 +1,4 @@
-# StockSense Deployment Guide
+# Videntis Deployment Guide
 
 ## Pre-Deployment Checklist
 
@@ -26,8 +26,8 @@
 1. Click "New +" → "Web Service"
 2. Connect your GitHub repository
 3. Configure:
-   - **Name**: stocksense-api
-   - **Root Directory**: `stocksense/backend`
+   - **Name**: Videntis-api
+   - **Root Directory**: `Videntis/backend`
    - **Environment**: Python 3
    - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port 8000`
@@ -41,12 +41,12 @@ GROQ_API_KEY=your_actual_groq_key
 ### Step 4: Deploy
 - Click "Create Web Service"
 - Wait for build to complete
-- Note your backend URL: `https://stocksense-api.onrender.com`
+- Note your backend URL: `https://Videntis-api.onrender.com`
 
 ### Alternative: Railway.app
 1. Go to https://railway.app
 2. "New Project" → "Deploy from GitHub"
-3. Select repo, set root to `stocksense/backend`
+3. Select repo, set root to `Videntis/backend`
 4. Add env var: `GROQ_API_KEY`
 5. Railway auto-detects Python and deploys
 
@@ -61,12 +61,12 @@ GROQ_API_KEY=your_actual_groq_key
 2. Import your GitHub repository
 3. Configure:
    - **Framework Preset**: Next.js
-   - **Root Directory**: `stocksense/frontend`
+   - **Root Directory**: `Videntis/frontend`
 
 ### Step 3: Environment Variables
 Add all these in Vercel dashboard:
 ```
-NEXT_PUBLIC_API_URL=https://stocksense-api.onrender.com
+NEXT_PUBLIC_API_URL=https://Videntis-api.onrender.com
 NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
@@ -78,7 +78,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
 ### Step 4: Deploy
 - Click "Deploy"
 - Wait for build to complete
-- Note your frontend URL: `https://stocksense.vercel.app`
+- Note your frontend URL: `https://Videntis.vercel.app`
 
 ## Post-Deployment Configuration
 
@@ -88,7 +88,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
 ```python
 allow_origins=[
     "http://localhost:3000",
-    "https://stocksense.vercel.app"  # your actual Vercel URL
+    "https://Videntis.vercel.app"  # your actual Vercel URL
 ]
 ```
 3. Commit and push to trigger redeploy
@@ -96,7 +96,7 @@ allow_origins=[
 ### Update Firebase Auth Domain
 1. Go to Firebase Console
 2. Authentication → Settings → Authorized domains
-3. Add your Vercel domain: `stocksense.vercel.app`
+3. Add your Vercel domain: `Videntis.vercel.app`
 
 ### Test Production
 - [ ] Visit your Vercel URL

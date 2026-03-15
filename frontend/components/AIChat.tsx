@@ -34,7 +34,7 @@ P/E: ${context.fundamentals?.pe_ratio}
 Revenue growth: ${context.fundamentals?.revenue_growth}%
 Sector: ${context.fundamentals?.sector}`
 
-      const prompt = `You are a financial analyst assistant for StockSense. Here is the current data for ${ticker}:
+      const prompt = `You are a financial analyst assistant for Videntis. Here is the current data for ${ticker}:
 
 ${systemContext}
 
@@ -62,7 +62,7 @@ Answer concisely in 2-3 sentences. Be specific, use the data above. No bullet po
 
   return (
     <div className="border border-[#1e1e1e] p-6">
-      <span className="font-mono text-[10px] text-[#9b9895] uppercase tracking-[0.2em] block mb-4">(06) AI ASSISTANT · {ticker}</span>
+      <span className="font-mono text-[10px] text-[#9ca3af] uppercase tracking-[0.2em] block mb-4">(06) AI ASSISTANT · {ticker}</span>
 
       <div className="h-64 overflow-y-auto space-y-3 mb-4 pr-1">
         {messages.map((m, i) => (
@@ -78,7 +78,7 @@ Answer concisely in 2-3 sentences. Be specific, use the data above. No bullet po
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="border border-[#1e1e1e] px-4 py-3 font-mono text-xs text-[#9b9895]">
+            <div className="border border-[#1e1e1e] px-4 py-3 font-mono text-xs text-[#9ca3af]">
               <span className="animate-pulse">Analyzing...</span>
             </div>
           </div>
@@ -106,3 +106,4 @@ Answer concisely in 2-3 sentences. Be specific, use the data above. No bullet po
     </div>
   )
 }
+

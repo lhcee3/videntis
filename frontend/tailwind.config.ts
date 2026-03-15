@@ -10,7 +10,7 @@ const config: Config = {
         border: "#1e1e1e",
         "border-hover": "#333333",
         primary: "#f0ede8",
-        muted: "#a9a9a2",
+        muted: "#9ca3af",
         "accent-green": "#00ff87",
         "accent-red": "#ff4444",
         "accent-gold": "#d4a847",

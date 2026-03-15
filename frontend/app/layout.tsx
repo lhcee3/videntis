@@ -5,6 +5,11 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-displa
 const spaceMono = Space_Mono({ weight: ["400", "700"], subsets: ["latin"], variable: "--font-mono" })
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" })
 
+export const metadata = {
+  title: "Videntis — AI Market Intelligence",
+  description: "Neural forecasts and deep analysis for any stock.",
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${playfair.variable} ${spaceMono.variable} ${dmSans.variable}`}>
@@ -14,3 +19,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   )
 }
+

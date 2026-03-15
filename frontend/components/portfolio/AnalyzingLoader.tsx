@@ -102,3 +102,4 @@ export default function AnalyzingLoader({ holdingCount }: { holdingCount: number
     </div>
   )
 }
+

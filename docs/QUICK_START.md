@@ -1,4 +1,4 @@
-# StockSense — Quick Start Guide
+# Videntis — Quick Start Guide
 
 Get up and running in 10 minutes!
 
@@ -19,7 +19,7 @@ Get up and running in 10 minutes!
 
 ### Firebase Setup (Required for auth/watchlist)
 1. Go to https://console.firebase.google.com
-2. Create new project "stocksense"
+2. Create new project "Videntis"
 3. Enable Firestore Database (test mode)
 4. Enable Authentication → Google provider
 5. Add web app → copy config values
@@ -50,14 +50,14 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
 
 **Linux/Mac:**
 ```bash
-cd stocksense
+cd Videntis
 chmod +x start-dev.sh
 ./start-dev.sh
 ```
 
 **Windows:**
 ```bash
-cd stocksense
+cd Videntis
 start-dev.bat
 ```
 
@@ -65,7 +65,7 @@ start-dev.bat
 
 **Terminal 1 - Backend:**
 ```bash
-cd stocksense/backend
+cd Videntis/backend
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
@@ -74,7 +74,7 @@ uvicorn main:app --reload
 
 **Terminal 2 - Frontend:**
 ```bash
-cd stocksense/frontend
+cd Videntis/frontend
 npm install
 npm run dev
 ```
@@ -160,7 +160,7 @@ open http://localhost:8000/docs
 ## File Structure Quick Reference
 
 ```
-stocksense/
+Videntis/
 ├── backend/
 │   ├── main.py              ← API entry point
 │   ├── routers/

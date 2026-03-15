@@ -1,4 +1,4 @@
-# StockSense — AI-Powered Stock Forecasting Dashboard
+# Videntis — AI-Powered Stock Forecasting Dashboard
 
 Full-stack AI-powered stock forecasting web app with $0/month cost.
 
@@ -32,7 +32,7 @@ Full-stack AI-powered stock forecasting web app with $0/month cost.
 
 1. Navigate to backend directory:
 ```bash
-cd stocksense/backend
+cd Videntis/backend
 ```
 
 2. Create a virtual environment and install dependencies:
@@ -60,7 +60,7 @@ Backend will be available at http://localhost:8000
 
 1. Navigate to frontend directory:
 ```bash
-cd stocksense/frontend
+cd Videntis/frontend
 ```
 
 2. Install dependencies:
@@ -70,7 +70,7 @@ npm install
 
 3. Set up Firebase:
    - Go to https://console.firebase.google.com
-   - Create a new project called "stocksense"
+   - Create a new project called "Videntis"
    - Enable Firestore Database (start in test mode)
    - Enable Authentication → add Google provider
    - Go to Project Settings → Your apps → Add Web app → copy the config
@@ -115,13 +115,13 @@ service cloud.firestore {
 ### Backend (Render.com or Railway.app)
 - Connect your GitHub repo
 - Set environment variable: `GROQ_API_KEY`
-- Deploy from `stocksense/backend` directory
+- Deploy from `Videntis/backend` directory
 
 ### Frontend (Vercel)
 - Connect your GitHub repo
 - Set all `NEXT_PUBLIC_*` environment variables
 - Update `NEXT_PUBLIC_API_URL` to your backend URL
-- Deploy from `stocksense/frontend` directory
+- Deploy from `Videntis/frontend` directory
 - Update CORS in `backend/main.py` with your Vercel URL
 
 ## API Endpoints
@@ -133,7 +133,7 @@ service cloud.firestore {
 ## Project Structure
 
 ```
-stocksense/
+Videntis/
 ├── backend/              # FastAPI backend
 │   ├── routers/         # API routes
 │   ├── services/        # Business logic
@@ -223,9 +223,9 @@ git push  # Auto-deploys to Vercel & Render
 ## 🔗 Live Demo
 
 After deployment:
-- Frontend: `https://stocksense.vercel.app`
-- Backend: `https://stocksense-api.onrender.com`
-- API Docs: `https://stocksense-api.onrender.com/docs`
+- Frontend: `https://Videntis.vercel.app`
+- Backend: `https://Videntis-api.onrender.com`
+- API Docs: `https://Videntis-api.onrender.com/docs`
 
 ## 🤝 Contributing
 

@@ -1,6 +1,6 @@
-# StockSense Documentation Index
+# Videntis Documentation Index
 
-Welcome to StockSense! This index will help you navigate all the documentation.
+Welcome to Videntis! This index will help you navigate all the documentation.
 
 ## 🚀 Getting Started (Start Here!)
 

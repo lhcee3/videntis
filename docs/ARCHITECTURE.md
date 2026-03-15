@@ -1,4 +1,4 @@
-# StockSense Architecture
+# Videntis Architecture
 
 ## System Overview
 
@@ -298,7 +298,7 @@ UI shows user info & watchlist button
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    USER BROWSER                          │
-│              https://stocksense.vercel.app               │
+│              https://Videntis.vercel.app               │
 └────────────────────────┬────────────────────────────────┘
                          │
                          │ HTTPS

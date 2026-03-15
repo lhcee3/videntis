@@ -39,8 +39,8 @@ function TickerTape({ items }: { items: TapeItem[] }) {
       <div className="flex gap-8 animate-tape whitespace-nowrap">
         {doubled.map((item, i) => (
           <span key={i} className="font-mono text-[10px] flex items-center gap-1.5">
-            <span className="text-[#555]">{item.ticker}</span>
-            <span className="text-[#9b9895]">${item.price.toFixed(2)}</span>
+            <span className="text-[#9ca3af]">{item.ticker}</span>
+            <span className="text-[#9ca3af]">${item.price.toFixed(2)}</span>
             <span style={{ color: item.change >= 0 ? "#00ff87" : "#ff4444" }}>
               {item.change >= 0 ? "+" : ""}{item.change.toFixed(2)}%
             </span>
@@ -68,7 +68,7 @@ function MarketStatus() {
   return (
     <div className="flex items-center gap-1.5">
       <span className={`w-1.5 h-1.5 rounded-full ${open ? "bg-[#00ff87] animate-pulse" : "bg-[#444]"}`} />
-      <span className="font-mono text-[10px] text-[#555] uppercase tracking-widest">
+      <span className="font-mono text-[10px] text-[#9ca3af] uppercase tracking-widest">
         {open ? "MARKET OPEN" : "MARKET CLOSED"}
       </span>
     </div>
@@ -179,20 +179,20 @@ export default function HomePage() {
 
       {/* Navbar */}
       <header className="relative z-20 px-8 py-5 flex justify-between items-center">
-        <div className="font-mono text-sm tracking-wider text-[#f0ede8]">STOCKSENSE</div>
+        <div className="font-mono text-sm font-bold tracking-[0.4em] text-[#f0ede8]">VIDENTIS</div>
         <div className="flex items-center gap-6">
           <MarketStatus />
-          <Link href="/screener" className="font-mono text-xs text-[#555] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Screener</Link>
-          <Link href="/portfolio" className="font-mono text-xs text-[#555] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Portfolio</Link>
-          <Link href="/watchlist" className="font-mono text-xs text-[#555] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Watchlist</Link>
-          <Link href="/tools" className="font-mono text-xs text-[#555] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Tools</Link>
+          <Link href="/screener" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Screener</Link>
+          <Link href="/portfolio" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Portfolio</Link>
+          <Link href="/watchlist" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Watchlist</Link>
+          <Link href="/tools" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Tools</Link>
           {!user ? (
-            <button onClick={() => signInWithGoogle()} className="px-4 py-2 border border-[#1e1e1e] text-[#555] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors font-mono text-xs uppercase">Sign In</button>
+            <button onClick={() => signInWithGoogle()} className="px-4 py-2 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors font-mono text-xs uppercase">Sign In</button>
           ) : (
             <div className="w-7 h-7 rounded-full overflow-hidden border border-[#2a2a2a] flex-shrink-0">
               {user.photoURL
                 ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-                : <div className="w-full h-full bg-[#1e1e1e] flex items-center justify-center font-mono text-[10px] text-[#9b9895]">
+                : <div className="w-full h-full bg-[#1e1e1e] flex items-center justify-center font-mono text-[10px] text-[#9ca3af]">
                     {user.displayName?.[0] ?? "?"}
                   </div>
               }
@@ -234,7 +234,7 @@ export default function HomePage() {
       {/* Hero */}
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6">
         <div className="max-w-2xl w-full">
-          <div className="font-mono text-xs text-[#444] mb-8">(01)</div>
+          <div className="font-mono text-xs text-[#9ca3af] mb-8">(01)</div>
 
           <h1 className="font-display text-7xl md:text-8xl mb-2 leading-none">
             <AnimatedWord word="MARKET" delay={0} />
@@ -242,7 +242,7 @@ export default function HomePage() {
           <h1 className="font-display text-7xl md:text-8xl mb-6 leading-none">
             <AnimatedWord word="INTELLIGENCE." delay={150} />
           </h1>
-          <p className="text-lg text-[#555] mb-10" style={{ opacity: 0, animation: "fadeUp 0.7s ease 0.45s forwards" }}>
+          <p className="text-lg text-[#9ca3af] mb-10" style={{ opacity: 0, animation: "fadeUp 0.7s ease 0.45s forwards" }}>
             Neural Forecasts for the Next 7 Days.
           </p>
 
@@ -263,7 +263,7 @@ export default function HomePage() {
               />
               <button
                 type="submit"
-                className="px-5 font-mono text-xs text-[#555] hover:text-[#f0ede8] border-l border-[#1e1e1e] transition-colors whitespace-nowrap"
+                className="px-5 font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] border-l border-[#1e1e1e] transition-colors whitespace-nowrap"
               >
                 SEARCH →
               </button>
@@ -281,9 +281,9 @@ export default function HomePage() {
                     className="w-full flex items-center justify-between px-6 py-3 hover:bg-[#111] transition-colors text-left">
                     <div>
                       <span className="font-mono text-sm text-[#f0ede8]">{r.symbol}</span>
-                      <span className="font-mono text-xs text-[#555] ml-3">{r.shortname}</span>
+                      <span className="font-mono text-xs text-[#9ca3af] ml-3">{r.shortname}</span>
                     </div>
-                    <span className="font-mono text-[10px] text-[#444]">{r.exchDisp}</span>
+                    <span className="font-mono text-[10px] text-[#9ca3af]">{r.exchDisp}</span>
                   </button>
                 ))}
               </div>
@@ -294,7 +294,7 @@ export default function HomePage() {
           <div className="flex gap-2 flex-wrap mb-8">
             {quickPicks.map(t => (
               <button key={t} onClick={() => handleSelect(t)}
-                className="px-3 py-1.5 border border-[#1e1e1e] text-[#555] hover:border-[#00ff87] hover:text-[#00ff87] transition-all duration-150 font-mono text-[10px] uppercase">
+                className="px-3 py-1.5 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#00ff87] hover:text-[#00ff87] transition-all duration-150 font-mono text-[10px] uppercase">
                 {t}
               </button>
             ))}
@@ -304,17 +304,17 @@ export default function HomePage() {
           <div className="flex items-center gap-0 border-t border-[#1e1e1e] pt-5">
             <div className="flex items-baseline gap-1.5 pr-5">
               <span className="font-mono text-sm text-[#f0ede8]">47</span>
-              <span className="font-mono text-[10px] text-[#444]">stocks tracked</span>
+              <span className="font-mono text-[10px] text-[#9ca3af]">stocks tracked</span>
             </div>
             <div className="w-px h-4 bg-[#1e1e1e]" />
             <div className="flex items-baseline gap-1.5 px-5">
               <span className="font-mono text-sm text-[#f0ede8]">312</span>
-              <span className="font-mono text-[10px] text-[#444]">forecasts run</span>
+              <span className="font-mono text-[10px] text-[#9ca3af]">forecasts run</span>
             </div>
             <div className="w-px h-4 bg-[#1e1e1e]" />
             <div className="flex items-baseline gap-1.5 pl-5">
               <span className="font-mono text-sm text-[#f0ede8]">94.2%</span>
-              <span className="font-mono text-[10px] text-[#444]">model accuracy</span>
+              <span className="font-mono text-[10px] text-[#9ca3af]">model accuracy</span>
             </div>
           </div>
         </div>
@@ -323,13 +323,13 @@ export default function HomePage() {
       {/* How it works */}
       <section className="relative z-10 border-t border-[#1e1e1e] px-8 py-16">
         <div className="max-w-5xl mx-auto">
-          <div className="font-mono text-[10px] text-[#444] uppercase tracking-[0.2em] mb-10">(02) HOW IT WORKS</div>
+          <div className="font-mono text-[10px] text-[#9ca3af] uppercase tracking-[0.2em] mb-10">(02) HOW IT WORKS</div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-[#1e1e1e]">
             {[
               {
                 n: "01",
                 label: "Search any stock",
-                desc: "Type a ticker or company name. StockSense pulls live price data, news, and 2 years of historical closes in seconds.",
+                desc: "Type a ticker or company name. Videntis pulls live price data, news, and 2 years of historical closes in seconds.",
               },
               {
                 n: "02",
@@ -343,9 +343,9 @@ export default function HomePage() {
               },
             ].map(step => (
               <div key={step.n} className="px-8 py-6 first:pl-0 last:pr-0 group">
-                <div className="font-mono text-[10px] text-[#444] mb-4">{step.n}</div>
+                <div className="font-mono text-[10px] text-[#9ca3af] mb-4">{step.n}</div>
                 <div className="font-display text-xl text-[#f0ede8] mb-3">{step.label}</div>
-                <p className="font-mono text-[11px] text-[#555] leading-relaxed">{step.desc}</p>
+                <p className="font-mono text-[11px] text-[#9ca3af] leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -355,3 +355,4 @@ export default function HomePage() {
     </div>
   )
 }
+

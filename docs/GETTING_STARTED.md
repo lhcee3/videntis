@@ -1,10 +1,10 @@
-# Getting Started with StockSense
+# Getting Started with Videntis
 
 Welcome! This guide will help you navigate the project and get started quickly.
 
-## 🎯 What is StockSense?
+## 🎯 What is Videntis?
 
-StockSense is a full-stack AI-powered stock forecasting dashboard that:
+Videntis is a full-stack AI-powered stock forecasting dashboard that:
 - Fetches real-time stock data from Yahoo Finance
 - Uses Facebook Prophet ML to forecast 7-day price movements
 - Generates plain English explanations using Groq LLaMA 3.3 70B
@@ -81,7 +81,7 @@ Complete checklist covering:
 ## 📁 Project Structure
 
 ```
-stocksense/
+Videntis/
 ├── backend/          # FastAPI Python backend
 │   ├── main.py      # API entry point
 │   ├── routers/     # API endpoints
@@ -157,7 +157,7 @@ You'll need these (all free, no credit card):
 
 ```bash
 # Clone or navigate to project
-cd stocksense
+cd Videntis
 
 # Automated startup (recommended)
 ./start-dev.sh          # Linux/Mac
@@ -339,4 +339,4 @@ Or explore the documentation:
 
 **Questions?** Check the documentation files above or review the code comments.
 
-**Good luck building StockSense!** 📈🚀
+**Good luck building Videntis!** 📈🚀

@@ -52,7 +52,7 @@ function StockCard({ ticker, name, priceData }: { ticker: string; name: string; 
       <div className="flex items-start justify-between mb-3">
         <div>
           <div className="font-mono text-base font-bold">{ticker}</div>
-          <div className="font-mono text-[10px] text-[#9b9895]">{name}</div>
+          <div className="font-mono text-[10px] text-[#9ca3af]">{name}</div>
         </div>
         {change != null && (
           <div className="font-mono text-xs px-2 py-1"
@@ -72,7 +72,7 @@ function StockCard({ ticker, name, priceData }: { ticker: string; name: string; 
       )}
 
       {volume != null && (
-        <div className="font-mono text-[10px] text-[#9b9895] mb-5">Vol {fmt(volume)}</div>
+        <div className="font-mono text-[10px] text-[#9ca3af] mb-5">Vol {fmt(volume)}</div>
       )}
 
       <div className="flex gap-2 mt-4">
@@ -81,7 +81,7 @@ function StockCard({ ticker, name, priceData }: { ticker: string; name: string; 
           FORECAST →
         </Link>
         <Link href={`/analyze/${ticker}`}
-          className="flex-1 text-center font-mono text-xs py-2.5 border border-[#1e1e1e] text-[#9b9895] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
+          className="flex-1 text-center font-mono text-xs py-2.5 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
           ANALYZE
         </Link>
       </div>
@@ -110,20 +110,20 @@ export default function ScreenerPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-[#f0ede8]">
       <header className="sticky top-0 bg-[#0a0a0a]/95 backdrop-blur border-b border-[#1e1e1e] px-8 py-4 flex items-center justify-between z-10">
         <div className="flex items-center gap-6">
-        <Link href="/" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">← STOCKSENSE</Link>
+        <Link href="/" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">← VIDENTIS</Link>
         </div>
         <div className="font-mono text-sm">SCREENER</div>
       </header>
 
       <main className="max-w-6xl mx-auto px-8 py-8">
-        <div className="font-mono text-[10px] text-[#9b9895] uppercase tracking-[0.2em] mb-2">(01) STOCK SCREENER</div>
+        <div className="font-mono text-[10px] text-[#9ca3af] uppercase tracking-[0.2em] mb-2">(01) STOCK SCREENER</div>
         <h1 className="font-display text-5xl mb-8">Find Stocks</h1>
 
         {trending.length > 0 && (
           <div className="border border-[#1e1e1e] p-6 mb-8">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-1.5 h-1.5 rounded-full bg-[#00ff87] animate-pulse" />
-              <span className="font-mono text-[10px] text-[#9b9895] uppercase tracking-[0.2em]">TRENDING TODAY</span>
+              <span className="font-mono text-[10px] text-[#9ca3af] uppercase tracking-[0.2em]">TRENDING TODAY</span>
             </div>
             <div className="flex gap-3 flex-wrap">
               {trending.map(t => (
@@ -160,3 +160,4 @@ export default function ScreenerPage() {
     </div>
   )
 }
+

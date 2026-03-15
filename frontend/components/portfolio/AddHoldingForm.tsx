@@ -65,3 +65,4 @@ export default function AddHoldingForm({ onAdd }: { onAdd: (h: Holding) => void 
     </div>
   )
 }
+

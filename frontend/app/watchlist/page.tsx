@@ -32,7 +32,7 @@ export default function WatchlistPage() {
       <div className="text-center">
         <div className="font-display text-4xl mb-4 text-[#f0ede8]">Sign in required</div>
         <button onClick={() => signInWithGoogle()}
-          className="font-mono text-sm border border-[#1e1e1e] text-[#9b9895] px-6 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
+          className="font-mono text-sm border border-[#1e1e1e] text-[#9ca3af] px-6 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
           SIGN IN WITH GOOGLE →
         </button>
       </div>
@@ -42,18 +42,18 @@ export default function WatchlistPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#f0ede8]">
       <header className="sticky top-0 bg-[#0a0a0a]/95 backdrop-blur border-b border-[#1e1e1e] px-8 py-4 flex items-center justify-between z-10">
-        <Link href="/" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">← STOCKSENSE</Link>
+        <Link href="/" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">← VIDENTIS</Link>
         <div className="font-mono text-sm">WATCHLIST</div>
       </header>
 
       <main className="max-w-5xl mx-auto px-8 py-8">
-        <div className="font-mono text-[10px] text-[#9b9895] uppercase tracking-[0.2em] mb-2">(01) WATCHLIST</div>
+        <div className="font-mono text-[10px] text-[#9ca3af] uppercase tracking-[0.2em] mb-2">(01) WATCHLIST</div>
         <h1 className="font-display text-5xl mb-8">Saved Tickers</h1>
 
         {tickers.length === 0 ? (
           <div className="border border-[#1e1e1e] p-12 text-center">
-            <div className="font-mono text-[#9b9895] mb-4">No tickers saved yet.</div>
-            <Link href="/" className="font-mono text-xs border border-[#1e1e1e] text-[#9b9895] px-6 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
+            <div className="font-mono text-[#9ca3af] mb-4">No tickers saved yet.</div>
+            <Link href="/" className="font-mono text-xs border border-[#1e1e1e] text-[#9ca3af] px-6 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
               Search stocks →
             </Link>
           </div>
@@ -64,7 +64,7 @@ export default function WatchlistPage() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="font-mono text-2xl font-bold">{ticker}</div>
                   <button onClick={() => handleRemove(ticker)}
-                    className="font-mono text-[10px] text-[#9b9895] opacity-0 group-hover:opacity-100 hover:text-[#ff4444] transition-all">
+                    className="font-mono text-[10px] text-[#9ca3af] opacity-0 group-hover:opacity-100 hover:text-[#ff4444] transition-all">
                     ✕ REMOVE
                   </button>
                 </div>
@@ -74,7 +74,7 @@ export default function WatchlistPage() {
                     FORECAST →
                   </Link>
                   <Link href={`/analyze/${ticker}`}
-                    className="flex-1 text-center font-mono text-xs py-2.5 border border-[#1e1e1e] text-[#9b9895] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
+                    className="flex-1 text-center font-mono text-xs py-2.5 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
                     ANALYZE
                   </Link>
                 </div>
@@ -86,3 +86,4 @@ export default function WatchlistPage() {
     </div>
   )
 }
+

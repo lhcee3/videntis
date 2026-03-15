@@ -42,3 +42,4 @@ export default function PortfolioSummary({ totals }: { totals: any }) {
     </div>
   )
 }
+

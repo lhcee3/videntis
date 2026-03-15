@@ -71,3 +71,4 @@ export default function NewsSentiment({ news, avgSentiment }: NewsSentimentProps
     </div>
   )
 }
+

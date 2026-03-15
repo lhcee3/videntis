@@ -84,3 +84,4 @@ export default function ForecastChart({ historical, forecast }: ForecastChartPro
     </div>
   )
 }
+

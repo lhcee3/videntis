@@ -12,7 +12,7 @@ function Loader({ ticker }: { ticker: string }) {
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
       <div className="text-center">
         <div className="w-8 h-8 border border-[#00ff87] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <div className="font-mono text-xs text-[#9b9895]">Analyzing {ticker}...</div>
+        <div className="font-mono text-xs text-[#9ca3af]">Analyzing {ticker}...</div>
         <div className="font-mono text-[10px] text-[#333] mt-2">Fetching technicals, fundamentals & AI insights</div>
       </div>
     </div>
@@ -34,7 +34,7 @@ export default function AnalyzePage({ params }: { params: { ticker: string } }) 
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
       <div className="text-center">
         <div className="font-mono text-[#ff4444] mb-4">{error}</div>
-        <Link href="/" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8]">← Back</Link>
+        <Link href="/" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8]">← Back</Link>
       </div>
     </div>
   )
@@ -47,8 +47,8 @@ export default function AnalyzePage({ params }: { params: { ticker: string } }) 
     <div className="min-h-screen bg-[#0a0a0a] text-[#f0ede8]">
       <header className="sticky top-0 bg-[#0a0a0a]/95 backdrop-blur border-b border-[#1e1e1e] px-8 py-4 flex items-center justify-between z-10">
         <div className="flex items-center gap-6">
-          <Link href="/" className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">← STOCKSENSE</Link>
-          <Link href={`/dashboard/${ticker}`} className="font-mono text-xs text-[#9b9895] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">FORECAST</Link>
+          <Link href="/" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">← VIDENTIS</Link>
+          <Link href={`/dashboard/${ticker}`} className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">FORECAST</Link>
         </div>
         <div className="flex items-center gap-6">
           <div className="font-mono text-sm">{ticker}</div>
@@ -61,23 +61,23 @@ export default function AnalyzePage({ params }: { params: { ticker: string } }) 
 
       <main className="max-w-7xl mx-auto px-8 py-8 space-y-6">
         <div className="border border-[#1e1e1e] p-8">
-          <div className="font-mono text-[10px] text-[#9b9895] uppercase tracking-[0.2em] mb-2">(01) DEEP ANALYSIS · {data.info.name}</div>
+          <div className="font-mono text-[10px] text-[#9ca3af] uppercase tracking-[0.2em] mb-2">(01) DEEP ANALYSIS · {data.info.name}</div>
           <div className="flex items-end gap-8 mb-6">
             <div>
               <div className="font-display text-6xl">${data.current_price}</div>
-              <div className="font-mono text-sm text-[#9b9895] mt-1">→ ${data.forecast_price} (7-day forecast)</div>
+              <div className="font-mono text-sm text-[#9ca3af] mt-1">→ ${data.forecast_price} (7-day forecast)</div>
             </div>
             <div className="flex gap-6">
               <div className="text-center">
-                <div className="font-mono text-[10px] text-[#9b9895]">TECHNICAL</div>
+                <div className="font-mono text-[10px] text-[#9ca3af]">TECHNICAL</div>
                 <div className="font-display text-3xl" style={{ color: data.scores.technical >= 7 ? "#00ff87" : data.scores.technical >= 5 ? "#d4a847" : "#ff4444" }}>{data.scores.technical}</div>
               </div>
               <div className="text-center">
-                <div className="font-mono text-[10px] text-[#9b9895]">FUNDAMENTAL</div>
+                <div className="font-mono text-[10px] text-[#9ca3af]">FUNDAMENTAL</div>
                 <div className="font-display text-3xl" style={{ color: data.scores.fundamental >= 7 ? "#00ff87" : data.scores.fundamental >= 5 ? "#d4a847" : "#ff4444" }}>{data.scores.fundamental}</div>
               </div>
               <div className="text-center">
-                <div className="font-mono text-[10px] text-[#9b9895]">OVERALL</div>
+                <div className="font-mono text-[10px] text-[#9ca3af]">OVERALL</div>
                 <div className="font-display text-3xl" style={{ color: verdictColor }}>{data.scores.overall}</div>
               </div>
             </div>
@@ -94,14 +94,14 @@ export default function AnalyzePage({ params }: { params: { ticker: string } }) 
           <div className="space-y-6">
             <AIChat ticker={ticker} context={data} />
             <div className="border border-[#1e1e1e] p-6">
-              <span className="font-mono text-[10px] text-[#9b9895] uppercase tracking-[0.2em] block mb-4">(04) NEWS SENTIMENT</span>
+              <span className="font-mono text-[10px] text-[#9ca3af] uppercase tracking-[0.2em] block mb-4">(04) NEWS SENTIMENT</span>
               <div className="space-y-3">
                 {data.news.map((n: any, i: number) => (
                   <a key={i} href={n.url} target="_blank" rel="noopener noreferrer"
                     className="block hover:bg-[#111] transition-colors p-2 -mx-2 border-b border-[#1e1e1e] last:border-0">
                     <div className="flex gap-2">
                       <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
-                        style={{ backgroundColor: n.sentiment === "positive" ? "#00ff87" : n.sentiment === "negative" ? "#ff4444" : "#9b9895" }} />
+                        style={{ backgroundColor: n.sentiment === "positive" ? "#00ff87" : n.sentiment === "negative" ? "#ff4444" : "#9ca3af" }} />
                       <div className="font-mono text-xs leading-relaxed text-[#f0ede8]">{n.headline}</div>
                     </div>
                   </a>
