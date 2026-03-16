@@ -161,12 +161,14 @@ export default function HomePage() {
     router.push(`/dashboard/${symbol}`)
   }
 
+  const quickPicks = ["NVDA", "AAPL", "TSLA", "MSFT", "AMZN"]
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (query.trim()) handleSelect(query.trim().toUpperCase())
   }
 
-  const quickPicks = ["NVDA", "AAPL", "TSLA", "MSFT", "AMZN"]
+  const [searchFocused, setSearchFocused] = useState(false)
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0a0a0a]" style={{
@@ -250,15 +252,22 @@ export default function HomePage() {
           <div ref={wrapperRef} className="relative mb-3">
             <form
               onSubmit={handleSubmit}
-              className="flex border border-[#1e1e1e] hover:border-[#2a2a2a] focus-within:border-[#f0ede8] transition-colors bg-[#0a0a0a]"
-              style={{ boxShadow: "0 0 40px rgba(0,255,135,0.04)" }}
+              className="flex border transition-all duration-300 bg-[#0a0a0a]"
+              style={{
+                borderColor: searchFocused ? "#f0ede8" : "#2a2a2a",
+                boxShadow: searchFocused
+                  ? "0 0 0 1px rgba(240,237,232,0.06), 0 0 40px rgba(240,237,232,0.08)"
+                  : "0 0 30px rgba(255,255,255,0.02)",
+              }}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
             >
               <input
                 type="text"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Search — Apple, NVDA, Tesla, Microsoft..."
-                className="flex-1 bg-transparent outline-none px-6 py-4 font-mono text-sm text-[#f0ede8] placeholder:text-[#333]"
+                className="flex-1 bg-transparent outline-none px-6 py-4 font-mono text-sm text-[#f0ede8] placeholder:text-[#9ca3af]"
                 autoComplete="off"
               />
               <button
