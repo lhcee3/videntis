@@ -2,10 +2,6 @@
 
 Full-stack AI-powered stock forecasting web app with $0/month cost.
 
-> 🚀 **Quick Start**: New to this project? Start with [QUICK_START.md](QUICK_START.md) for a 10-minute setup guide!
-> 
-> 📚 **Documentation Index**: See [INDEX.md](INDEX.md) for complete documentation navigation.
-
 ## Features
 
 - Real-time stock data via Yahoo Finance (free, no API key)
