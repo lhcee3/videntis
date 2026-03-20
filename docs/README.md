@@ -1,245 +1,158 @@
-# Videntis — AI-Powered Stock Forecasting Dashboard
+# Videntis
 
-Full-stack AI-powered stock forecasting web app with $0/month cost.
+AI-powered stock intelligence platform. 7-day price forecasts, deep technical analysis, portfolio tracking, and plain-English AI explanations — all in a single dark-mode interface.
 
 ## Features
 
-- Real-time stock data via Yahoo Finance (free, no API key)
-- Facebook Prophet 7-day price forecasts
-- Groq LLaMA 3.3 AI explanations in plain English
-- News sentiment analysis with VADER
-- Firebase authentication & watchlist storage
-- Premium editorial dark design
+- Live ticker tape with real-time price and daily change
+- Yahoo Finance search — type a company name or ticker
+- 7-day Prophet forecast with confidence bands
+- Deep analysis: RSI, MACD, Bollinger Bands, moving averages
+- Fundamentals: P/E, EPS, market cap, sector
+- AI summary via Gemini — one paragraph you can act on
+- News sentiment scoring per article
+- Portfolio tracker with Gemini AI analysis
+- Watchlist with Firebase persistence
+- Risk management calculator — position sizer and R:R planner
+- Market open/closed indicator (ET timezone)
+- Google Sign-In
 
-## Tech Stack
+---
 
-- **Frontend**: Next.js 14, Tailwind CSS, Recharts
-- **Backend**: FastAPI (Python)
-- **ML**: Facebook Prophet
-- **LLM**: Groq API (LLaMA 3.3 70B)
-- **Data**: yfinance (Yahoo Finance)
-- **Sentiment**: VADER
-- **Database**: Firebase Firestore
-- **Auth**: Firebase Auth
+## Local Development
 
-## Setup Instructions
+### Prerequisites
 
-### Backend Setup
+- Python 3.10+
+- Node.js 18+
+- A Firebase project with Firestore and Google Auth enabled
+- A Gemini API key from [Google AI Studio](https://aistudio.google.com)
 
-1. Navigate to backend directory:
+### Backend
+
 ```bash
-cd Videntis/backend
-```
-
-2. Create a virtual environment and install dependencies:
-```bash
+cd backend
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # Mac/Linux
 pip install -r requirements.txt
 ```
 
-3. Get your free Groq API key from https://console.groq.com
-
-4. Update `.env` file with your Groq API key:
+Create `backend/.env`:
 ```
-GROQ_API_KEY=your_actual_groq_key_here
+GEMINI_API_KEY=your_key_here
 ```
 
-5. Run the backend:
+Start the server:
 ```bash
 uvicorn main:app --reload
 ```
 
-Backend will be available at http://localhost:8000
+API available at `http://localhost:8000`. Interactive docs at `http://localhost:8000/docs`.
 
-### Frontend Setup
+### Frontend
 
-1. Navigate to frontend directory:
 ```bash
-cd Videntis/frontend
-```
-
-2. Install dependencies:
-```bash
+cd frontend
 npm install
 ```
 
-3. Set up Firebase:
-   - Go to https://console.firebase.google.com
-   - Create a new project called "Videntis"
-   - Enable Firestore Database (start in test mode)
-   - Enable Authentication → add Google provider
-   - Go to Project Settings → Your apps → Add Web app → copy the config
+Create `frontend/.env.local`:
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=...
+```
 
-4. Update `.env.local` with your Firebase credentials
-
-5. Run the frontend:
+Start the dev server:
 ```bash
 npm run dev
 ```
 
-Frontend will be available at http://localhost:3000
+Frontend available at `http://localhost:3000`.
 
-### Docker Setup (Alternative)
+---
 
-Run backend with Docker:
-```bash
-docker-compose up
-```
+## API Reference
 
-## Firebase Firestore Security Rules
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/health` | Health check |
+| GET | `/forecast/{ticker}` | 7-day Prophet forecast + news + AI explanation |
+| GET | `/analyze/{ticker}` | Technical indicators, fundamentals, AI summary, scores |
+| GET | `/sentiment/{ticker}` | News sentiment for a ticker |
+| GET | `/trending` | Trending tickers from Yahoo Finance |
+| GET | `/prices?tickers=A,B,C` | Batch current price + daily change |
+| POST | `/portfolio/analyze` | Gemini AI analysis of a portfolio |
 
-Add these in Firebase Console → Firestore → Rules:
+---
 
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    match /predictions/{doc} {
-      allow read: if request.auth != null;
-      allow write: if false;
-    }
-  }
-}
-```
+## Firebase Setup
 
-## Deployment
+1. Go to [Firebase Console](https://console.firebase.google.com) and create a project
+2. Enable Firestore Database (start in test mode, then apply the rules below)
+3. Enable Authentication and add the Google provider
+4. Go to Project Settings → Your apps → Add Web app → copy the config into `.env.local`
 
-### Backend (Render.com or Railway.app)
-- Connect your GitHub repo
-- Set environment variable: `GROQ_API_KEY`
-- Deploy from `Videntis/backend` directory
-
-### Frontend (Vercel)
-- Connect your GitHub repo
-- Set all `NEXT_PUBLIC_*` environment variables
-- Update `NEXT_PUBLIC_API_URL` to your backend URL
-- Deploy from `Videntis/frontend` directory
-- Update CORS in `backend/main.py` with your Vercel URL
-
-## API Endpoints
-
-- `GET /health` - Health check
-- `GET /forecast/{ticker}` - Get forecast and analysis for a stock
-- `GET /sentiment/{ticker}` - Get news sentiment for a stock
 
 ## Project Structure
 
 ```
-Videntis/
-├── backend/              # FastAPI backend
-│   ├── routers/         # API routes
-│   ├── services/        # Business logic
-│   └── models/          # Pydantic schemas
-├── frontend/            # Next.js frontend
-│   ├── app/            # App router pages
-│   ├── components/     # React components
-│   ├── lib/            # Utilities
-│   └── hooks/          # Custom hooks
-└── docker-compose.yml  # Docker setup
+videntis/
+├── backend/
+│   ├── main.py                  # FastAPI app, CORS, router registration
+│   ├── requirements.txt
+│   ├── .env                     # GEMINI_API_KEY
+│   ├── routers/
+│   │   ├── forecast.py          # Prophet forecast endpoint
+│   │   ├── analyze.py           # Technical + fundamental analysis
+│   │   ├── sentiment.py         # News sentiment
+│   │   ├── portfolio.py         # Portfolio analysis with Gemini
+│   │   ├── trending.py          # Trending tickers
+│   │   └── prices.py            # Batch price fetch
+│   ├── services/
+│   │   ├── stock_data.py        # yfinance wrapper
+│   │   ├── prophet_model.py     # Prophet training + forecast
+│   │   ├── technical.py         # RSI, MACD, Bollinger Bands
+│   │   ├── fundamentals.py      # P/E, EPS, market cap
+│   │   ├── groq_explainer.py    # Gemini REST calls
+│   │   └── vader_sentiment.py   # VADER sentiment scoring
+│   └── models/
+│       └── schemas.py           # Pydantic models
+└── frontend/
+    ├── app/
+    │   ├── page.tsx             # Homepage — search, ticker tape, hero
+    │   ├── dashboard/[ticker]/  # Forecast + chart + news
+    │   ├── analyze/[ticker]/    # Deep analysis page
+    │   ├── screener/            # Stock screener grid
+    │   ├── portfolio/           # Portfolio tracker
+    │   ├── watchlist/           # Saved tickers
+    │   └── tools/               # Risk management calculator
+    ├── components/
+    │   ├── ForecastChart.tsx
+    │   ├── TechnicalIndicators.tsx
+    │   ├── FundamentalsCard.tsx
+    │   ├── RiskCalculator.tsx
+    │   ├── AIChat.tsx
+    │   ├── NewsSentiment.tsx
+    │   ├── WatchlistButton.tsx
+    │   └── portfolio/
+    ├── lib/
+    │   ├── api.ts               # All backend fetch calls
+    │   └── firebase.ts          # Firebase init + Firestore helpers
+    └── hooks/
+        └── useAuth.ts           # Firebase auth state hook
 ```
 
-## Free Tier Limits
+## Notes
 
-- Groq: 14,400 req/day on LLaMA 3.3 70B
-- Firebase: 50K reads/day, 20K writes/day, 1GB storage
-- Vercel: Unlimited bandwidth for hobby projects
-- Render/Railway: 750 hours/month free tier
-
-## License
-
-MIT
-
-
-## 📚 Complete Documentation
-
-This project includes comprehensive documentation:
-
-- **[INDEX.md](INDEX.md)** - Documentation navigation guide
-- **[QUICK_START.md](QUICK_START.md)** - 10-minute setup guide ⭐
-- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Detailed 2-3 week build guide
-- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Production deployment guide
-- **[API_REFERENCE.md](API_REFERENCE.md)** - Complete API documentation
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture & diagrams
-- **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)** - Comprehensive overview
-- **[FILE_TREE.txt](FILE_TREE.txt)** - Complete file structure
-
-## 🎯 Project Stats
-
-- **Total Files**: 45 (11 backend, 20 frontend, 14 docs/config)
-- **Lines of Code**: ~2,000
-- **Technologies**: 15+
-- **Build Time**: 2-3 weeks
-- **Operating Cost**: $0/month
-- **Deployment Time**: ~30 minutes
-
-## 🏆 Resume Highlights
-
-This project demonstrates:
-- Full-stack development (Next.js + FastAPI)
-- Machine learning integration (Prophet)
-- LLM integration (Groq LLaMA 3.3)
-- Real-time data processing
-- NoSQL database design (Firestore)
-- Authentication & authorization
-- RESTful API design
-- Responsive UI/UX
-- Cloud deployment
-- Cost optimization ($0/month)
-
-## 🚀 Quick Commands
-
-```bash
-# Start development (automated)
-./start-dev.sh          # Linux/Mac
-start-dev.bat           # Windows
-
-# Start development (manual)
-cd backend && uvicorn main:app --reload
-cd frontend && npm run dev
-
-# Test API
-curl http://localhost:8000/health
-curl http://localhost:8000/forecast/NVDA
-
-# Deploy
-git push  # Auto-deploys to Vercel & Render
-```
-
-## 📊 Performance Metrics
-
-- **API Response**: 3-8 seconds (includes ML training)
-- **LLM Response**: 0.5-1 second
-- **Chart Render**: <100ms
-- **Page Load**: <2 seconds
-
-## 🔗 Live Demo
-
-After deployment:
-- Frontend: `https://Videntis.vercel.app`
-- Backend: `https://Videntis-api.onrender.com`
-- API Docs: `https://Videntis-api.onrender.com/docs`
-
-## 🤝 Contributing
-
-This is a portfolio/learning project. Feel free to fork and customize!
-
-## 📝 Notes
-
-- Prophet training takes 2-5 seconds (normal)
-- Free tier limits are generous for personal use
-- All services have free tiers with no credit card required
-- Complete documentation included for learning
-
-## ⭐ Star This Project
-
-If you find this helpful, please star the repository!
+- Prophet training runs on each forecast request and takes 3–8 seconds — this is expected
+- The Gemini API key is used server-side only; it is never exposed to the browser
+- Firebase free tier: 50K reads/day, 20K writes/day — sufficient for personal use
+- No Docker required for development; `docker-compose.yml` is provided for containerised deployment
 
 ---
-
-**Built with**: Next.js 14, FastAPI, Prophet, Groq LLaMA 3.3, Firebase, Tailwind CSS
-
-**Status**: ✅ Production Ready | 📚 Fully Documented | 💰 $0/month | 🎓 Portfolio Ready

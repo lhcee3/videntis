@@ -8,7 +8,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://your-app.vercel.app"  # replace after Vercel deploy
+        "https://videntis.vercel.app",
     ],
     allow_methods=["*"],
     allow_headers=["*"],
