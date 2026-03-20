@@ -317,7 +317,7 @@ export default function HomePage() {
               {
                 n: "03",
                 label: "Read the plain-English explanation",
-                desc: "Gemini AI synthesises the technicals, sentiment, and forecast into a single paragraph you can actually act on.",
+                desc: "The AI engine synthesises the technicals, sentiment, and forecast into a single paragraph you can actually act on.",
               },
             ].map(step => (
               <div key={step.n} className="px-8 py-6 first:pl-0 last:pr-0 group">
