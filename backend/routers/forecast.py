@@ -6,6 +6,15 @@ from services.vader_sentiment import get_news_sentiment
 
 router = APIRouter()
 
+@router.get("/{ticker}/info")
+async def get_ticker_info(ticker: str):
+    ticker = ticker.upper()
+    try:
+        info = get_stock_info(ticker)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return info
+
 @router.get("/{ticker}")
 async def forecast_stock(ticker: str):
     ticker = ticker.upper().strip()

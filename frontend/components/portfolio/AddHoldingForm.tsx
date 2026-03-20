@@ -57,7 +57,7 @@ export default function AddHoldingForm({ onAdd }: { onAdd: (h: Holding) => void 
         <button
           type="button"
           onClick={handleSubmit}
-          className="border border-[#1e1e1e] font-mono text-sm px-6 py-3 hover:border-[#00ff87] hover:text-[#00ff87] transition-colors"
+          className="border border-[#1e1e1e] font-mono text-sm px-6 py-3 hover:border-[#00ff87] hover:text-[#00ff87] transition-all duration-150"
         >
           ADD +
         </button>

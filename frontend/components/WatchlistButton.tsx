@@ -47,7 +47,7 @@ export default function WatchlistButton({ ticker }: WatchlistButtonProps) {
     return (
       <button
         onClick={handleToggle}
-        className="w-full font-mono text-xs border border-[#1e1e1e] text-[#9ca3af] px-4 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase"
+        className="w-full font-mono text-xs border border-[#1e1e1e] text-[#9ca3af] px-4 py-3 hover:border-[#00ff87] hover:text-[#00ff87] transition-colors uppercase"
       >
         SIGN IN TO SAVE
       </button>
@@ -57,13 +57,13 @@ export default function WatchlistButton({ ticker }: WatchlistButtonProps) {
   return (
     <button
       onClick={handleToggle}
-      className={`w-full font-mono text-xs px-4 py-3 transition-colors uppercase ${
+      className={`w-full font-mono text-xs px-4 py-3 transition-all duration-150 uppercase ${
         inWatchlist
-          ? "bg-[#f0ede8] text-[#0a0a0a] hover:bg-white"
-          : "border border-[#1e1e1e] text-[#9ca3af] hover:border-[#2a2a2a] hover:text-[#f0ede8]"
+          ? "border border-[#00ff87] text-[#00ff87] hover:bg-[rgba(0,255,135,0.06)]"
+          : "border border-[#1e1e1e] text-[#9ca3af] hover:border-[#00ff87] hover:text-[#00ff87]"
       }`}
     >
-      {inWatchlist ? "✓ SAVED TO WATCHLIST" : "+ ADD TO WATCHLIST"}
+      {inWatchlist ? "✓ SAVED" : "+ ADD TO WATCHLIST"}
     </button>
   )
 }

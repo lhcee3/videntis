@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation"
 import { signInWithGoogle } from "@/lib/firebase"
 import { useAuth } from "@/hooks/useAuth"
 import Link from "next/link"
-import { AreaChart, Area, ResponsiveContainer, Tooltip } from "recharts"
 
 interface SearchResult {
   symbol: string
@@ -91,12 +90,6 @@ function AnimatedWord({ word, delay }: { word: string; delay: number }) {
     </span>
   )
 }
-
-// ── Ambient background chart (static sparkline) ───────────────────────────────
-const CHART_DATA = [
-  42,45,43,47,46,50,48,53,51,55,54,58,56,60,59,63,61,65,64,68,
-  66,70,69,73,71,75,74,78,76,80,79,83,81,85,84,88,86,90,89,93,
-].map((v, i) => ({ i, v }))
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function HomePage() {
@@ -189,7 +182,7 @@ export default function HomePage() {
           <Link href="/watchlist" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Watchlist</Link>
           <Link href="/tools" className="font-mono text-xs text-[#9ca3af] hover:text-[#f0ede8] uppercase tracking-widest transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#f0ede8] after:transition-all hover:after:w-full">Tools</Link>
           {!user ? (
-            <button onClick={() => signInWithGoogle()} className="px-4 py-2 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors font-mono text-xs uppercase">Sign In</button>
+            <button onClick={() => signInWithGoogle()} className="px-4 py-2 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#00ff87] hover:text-[#00ff87] transition-colors font-mono text-xs uppercase">Sign In</button>
           ) : (
             <div className="w-7 h-7 rounded-full overflow-hidden border border-[#2a2a2a] flex-shrink-0">
               {user.photoURL
@@ -208,34 +201,11 @@ export default function HomePage() {
         <TickerTape items={tapeItems} />
       </div>
 
-      {/* Ambient background chart */}
-      <div className="absolute inset-0 z-0 pointer-events-none" style={{ top: "88px" }}>
-        <div style={{ height: "55vh", opacity: 0.07 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={CHART_DATA} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
-              <defs>
-                <linearGradient id="ambientGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#00ff87" stopOpacity={0.4} />
-                  <stop offset="100%" stopColor="#00ff87" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <Area
-                type="monotone"
-                dataKey="v"
-                stroke="#00ff87"
-                strokeWidth={1.5}
-                fill="url(#ambientGrad)"
-                dot={false}
-                isAnimationActive={false}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+
 
       {/* Hero */}
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6">
-        <div className="max-w-2xl w-full">
+        <div className="relative z-10 max-w-2xl w-full">
           <div className="font-mono text-xs text-[#9ca3af] mb-8">(01)</div>
 
           <h1 className="font-display text-7xl md:text-8xl mb-2 leading-none">
@@ -252,12 +222,13 @@ export default function HomePage() {
           <div ref={wrapperRef} className="relative mb-3">
             <form
               onSubmit={handleSubmit}
-              className="flex border transition-all duration-300 bg-[#0a0a0a]"
+              className="flex border bg-[#0a0a0a]"
               style={{
-                borderColor: searchFocused ? "#f0ede8" : "#2a2a2a",
+                borderColor: searchFocused ? "rgba(0,255,135,0.6)" : "#2a2a2a",
                 boxShadow: searchFocused
-                  ? "0 0 0 1px rgba(240,237,232,0.06), 0 0 40px rgba(240,237,232,0.08)"
+                  ? "0 0 0 3px rgba(0,255,135,0.10), 0 0 20px rgba(0,255,135,0.08)"
                   : "0 0 30px rgba(255,255,255,0.02)",
+                transition: "border-color 150ms ease, box-shadow 150ms ease",
               }}
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}

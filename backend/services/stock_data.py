@@ -14,7 +14,7 @@ def get_stock_info(ticker: str) -> dict:
     return {
         "name": info.get("longName", ticker),
         "price": info.get("currentPrice") or info.get("regularMarketPrice"),
-        "change_pct": round((info.get("52WeekChange") or 0) * 100, 2),
+        "change_pct": round(info.get("regularMarketChangePercent", 0), 2),
         "volume": info.get("volume"),
         "market_cap": info.get("marketCap"),
         "sector": info.get("sector", ""),

@@ -60,7 +60,7 @@ export default function PortfolioPage() {
     <main className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
       <div className="text-center">
         <p className="font-mono text-[#6b6966] mb-4">Sign in to track your portfolio</p>
-        <button onClick={() => signInWithGoogle()} className="font-mono text-sm border border-[#1e1e1e] text-[#9ca3af] px-6 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
+        <button onClick={() => signInWithGoogle()} className="font-mono text-sm border border-[#1e1e1e] text-[#9ca3af] px-6 py-3 hover:border-[#00ff87] hover:text-[#00ff87] transition-colors uppercase">
           SIGN IN WITH GOOGLE →
         </button>
       </div>
@@ -85,7 +85,7 @@ export default function PortfolioPage() {
           <HoldingsTable holdings={holdings} analysisData={analysisData} onRemove={handleRemove} />
           <div className="flex items-center gap-6 mt-6">
             <button onClick={handleAnalyze} disabled={analyzing}
-              className="bg-[#f0ede8] text-[#0a0a0a] font-mono text-sm px-8 py-4 uppercase tracking-widest hover:bg-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+              className="bg-[#f0ede8] text-[#0a0a0a] font-mono text-sm px-8 py-4 uppercase tracking-widest hover:bg-white active:scale-[0.98] transition-all duration-150 disabled:opacity-30 disabled:cursor-not-allowed">
               {analyzing ? "ANALYZING..." : "RUN FORECAST ANALYSIS →"}
             </button>
             {lastAnalyzed && <span className="font-mono text-[10px] text-[#6b6966]">Last analyzed: {lastAnalyzed.toLocaleTimeString()}</span>}

@@ -32,7 +32,7 @@ export default function WatchlistPage() {
       <div className="text-center">
         <div className="font-display text-4xl mb-4 text-[#f0ede8]">Sign in required</div>
         <button onClick={() => signInWithGoogle()}
-          className="font-mono text-sm border border-[#1e1e1e] text-[#9ca3af] px-6 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
+          className="font-mono text-sm border border-[#1e1e1e] text-[#9ca3af] px-6 py-3 hover:border-[#00ff87] hover:text-[#00ff87] transition-colors uppercase">
           SIGN IN WITH GOOGLE →
         </button>
       </div>
@@ -53,14 +53,14 @@ export default function WatchlistPage() {
         {tickers.length === 0 ? (
           <div className="border border-[#1e1e1e] p-12 text-center">
             <div className="font-mono text-[#9ca3af] mb-4">No tickers saved yet.</div>
-            <Link href="/" className="font-mono text-xs border border-[#1e1e1e] text-[#9ca3af] px-6 py-3 hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
+            <Link href="/" className="font-mono text-xs border border-[#1e1e1e] text-[#9ca3af] px-6 py-3 hover:border-[#00ff87] hover:text-[#00ff87] transition-colors uppercase">
               Search stocks →
             </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {tickers.map(ticker => (
-              <div key={ticker} className="border border-[#1e1e1e] p-6 hover:border-[#2a2a2a] hover:bg-[#0d0d0d] transition-all group">
+              <div key={ticker} className="border border-[#1e1e1e] p-6 hover:border-[#2a2a2a] hover:bg-[#0d0d0d] transition-all duration-150 group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="font-mono text-2xl font-bold">{ticker}</div>
                   <button onClick={() => handleRemove(ticker)}
@@ -70,11 +70,11 @@ export default function WatchlistPage() {
                 </div>
                 <div className="flex gap-2">
                   <Link href={`/dashboard/${ticker}`}
-                    className="flex-1 text-center font-mono text-xs py-2.5 bg-[#f0ede8] text-[#0a0a0a] hover:bg-white transition-colors uppercase">
+                    className="flex-1 text-center font-mono text-xs py-2.5 bg-[#f0ede8] text-[#0a0a0a] hover:bg-white active:scale-[0.98] transition-all duration-150 uppercase">
                     FORECAST →
                   </Link>
                   <Link href={`/analyze/${ticker}`}
-                    className="flex-1 text-center font-mono text-xs py-2.5 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors uppercase">
+                    className="flex-1 text-center font-mono text-xs py-2.5 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#00ff87] hover:text-[#00ff87] transition-colors uppercase">
                     ANALYZE
                   </Link>
                 </div>

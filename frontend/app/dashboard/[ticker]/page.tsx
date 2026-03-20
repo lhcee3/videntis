@@ -16,7 +16,7 @@ export default async function DashboardPage({ params }: { params: { ticker: stri
         <div className="text-center">
           <div className="font-display text-4xl mb-4">Ticker not found</div>
           <div className="text-muted mb-6">Please check the ticker symbol and try again.</div>
-          <Link href="/" className="px-6 py-3 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#2a2a2a] hover:text-[#f0ede8] transition-colors font-mono text-xs uppercase inline-block">
+          <Link href="/" className="px-6 py-3 border border-[#1e1e1e] text-[#9ca3af] hover:border-[#00ff87] hover:text-[#00ff87] transition-colors font-mono text-xs uppercase inline-block">
             ← BACK TO SEARCH
           </Link>
         </div>

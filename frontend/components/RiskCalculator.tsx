@@ -36,7 +36,7 @@ export default function RiskCalculator() {
     const riskPctMove   = ((risk / e) * 100).toFixed(1)
     const rewardPctMove = ((reward / e) * 100).toFixed(1)
     const riskW      = Math.round((risk / (risk + reward)) * 100)
-    const verdict    = ratio >= 3 ? "Excellent" : ratio >= 2 ? "Good" : ratio >= 1 ? "Acceptable" : "Poor"
+    const verdict    = ratio >= 3 ? "Excellent" : ratio >= 2 ? "Good" : ratio >= 1 ? "Acceptable" : "Poor — avoid"
     const color      = ratio >= 2 ? "#00ff87" : ratio >= 1 ? "#d4a847" : "#ff4444"
     return { ratio, minWin, riskPctMove, rewardPctMove, riskW, rewardW: 100 - riskW, verdict, color }
   }, [entry, stopLoss, target])
@@ -45,12 +45,12 @@ export default function RiskCalculator() {
     const r = parseFloat(riskPct) || 0
     if (!r) return null
     if (r < 1)  return { text: "Conservative", color: "#00ff87" }
-    if (r <= 2) return { text: "Standard",     color: "#00ff87" }
+    if (r <= 3) return { text: "Standard",     color: "#00ff87" }
     if (r <= 5) return { text: "Aggressive",   color: "#d4a847" }
     return       { text: "Dangerous",          color: "#ff4444" }
   }, [riskPct])
 
-  const allocColor = pos.allocPct <= 20 ? "#00ff87" : pos.allocPct <= 30 ? "#d4a847" : "#ff4444"
+  const allocColor = pos.allocPct <= 20 ? "#00ff87" : pos.allocPct <= 40 ? "#d4a847" : "#ff4444"
   const hasPos = pos.shares > 0
 
   return (
@@ -143,7 +143,7 @@ export default function RiskCalculator() {
               </div>
 
               <p className="font-mono text-[10px] text-[#9ca3af] leading-relaxed">
-                At this R:R ratio you need to win {rr.minWin}% of trades to be profitable long-term.
+                You need to win {rr.minWin}% of trades to break even.
               </p>
             </>
           ) : (
