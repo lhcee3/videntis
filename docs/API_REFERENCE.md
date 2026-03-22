@@ -1,117 +1,170 @@
 # Videntis API Reference
 
 Base URL (local): `http://localhost:8000`
-Base URL (production): `https://your-app.onrender.com`
+Base URL (production): your Railway backend URL
 
-## Endpoints
+---
 
-### Health Check
+## Health Check
+
 ```
 GET /health
 ```
 
-**Response:**
+Response:
 ```json
-{
-  "status": "ok"
-}
+{ "status": "ok" }
 ```
 
 ---
 
-### Get Stock Forecast
+## Forecast Endpoints
+
+### Prophet Forecast
 ```
 GET /forecast/{ticker}
 ```
 
-**Parameters:**
-- `ticker` (path) - Stock ticker symbol (e.g., NVDA, AAPL)
+Runs Prophet on 6 months of historical data. Takes 3-8 seconds.
 
-**Example Request:**
-```bash
-curl http://localhost:8000/forecast/NVDA
-```
-
-**Response:**
+Response:
 ```json
 {
   "ticker": "NVDA",
-  "info": {
-    "name": "NVIDIA Corporation",
-    "price": 875.40,
-    "change_pct": 45.23,
-    "volume": 45234567,
-    "market_cap": 2150000000000,
-    "sector": "Technology"
-  },
-  "historical": [
-    {
-      "Date": "2025-01-01",
-      "Close": 850.20,
-      "Volume": 42000000
-    }
-  ],
-  "forecast": [
-    {
-      "ds": "2025-01-15",
-      "yhat": 910.50,
-      "yhat_lower": 890.20,
-      "yhat_upper": 930.80,
-      "is_forecast": true
-    }
-  ],
-  "explanation": "NVDA is predicted to rise 4.0% over the next 7 days to $910.50, driven by strong volume momentum (+28% vs 30-day average) and positive news sentiment. However, market volatility remains a factor.",
-  "news": [
-    {
-      "headline": "NVIDIA announces new AI chip",
-      "url": "https://...",
-      "published": "2025-01-10T10:00:00Z",
-      "sentiment": "positive",
-      "score": 0.85
-    }
-  ],
+  "info": { "name": "NVIDIA Corporation", "price": 875.40, "change_pct": 2.3, "volume": 45234567, "market_cap": 2150000000000, "sector": "Technology" },
+  "historical": [{ "Date": "2025-01-01", "Close": 850.20, "Volume": 42000000 }],
+  "forecast": [{ "ds": "2025-01-15", "yhat": 910.50, "yhat_lower": 890.20, "yhat_upper": 930.80, "is_forecast": true }],
+  "explanation": "NVDA is forecast to rise moderately by 4.0% over the next 7 days...",
+  "news": [{ "headline": "...", "url": "...", "published": "...", "sentiment": "positive", "score": 0.85 }],
   "volume_change_pct": 28.5,
   "avg_sentiment": 0.42
 }
 ```
 
-**Error Response (404):**
+---
+
+### LSTM Forecast
+```
+GET /forecast/{ticker}/lstm
+```
+
+Pure LSTM inference. Supported tickers only. Returns in under 1 second.
+
+Supported tickers: AAPL, AMD, AMZN, GOOGL, JPM, META, MSFT, NFLX, NVDA, TSLA
+
+Response:
 ```json
 {
-  "detail": "Ticker 'INVALID' not found: ..."
+  "ticker": "NVDA",
+  "info": { ... },
+  "last_price": 875.40,
+  "forecast": [880.12, 884.50, 887.20, 885.90, 883.10, 881.40, 879.80],
+  "forecast_dates": ["2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27", "2026-03-28", "2026-03-31"],
+  "confidence_bands": { "upper": [892.32, ...], "lower": [867.92, ...] },
+  "explanation": "...",
+  "model": "lstm"
 }
 ```
 
 ---
 
-### Get News Sentiment
+### Blended Forecast (recommended)
+```
+GET /forecast/{ticker}/blended
+```
+
+LSTM 60% + Prophet 40% for supported tickers. Falls back to Prophet-only for unsupported tickers. This is the endpoint the frontend uses by default.
+
+Response:
+```json
+{
+  "ticker": "NVDA",
+  "info": { ... },
+  "historical": [...],
+  "last_price": 875.40,
+  "forecast_prices": [882.10, 885.30, ...],
+  "forecast_dates": ["2026-03-23", ...],
+  "confidence_bands": { "upper": [...], "lower": [...] },
+  "forecast": [...],
+  "explanation": "...",
+  "news": [...],
+  "volume_change_pct": 12.3,
+  "avg_sentiment": 0.21,
+  "model": "lstm+prophet"
+}
+```
+
+`model` field is either `"lstm+prophet"` or `"prophet"`.
+
+---
+
+### Stock Info (fast)
+```
+GET /forecast/{ticker}/info
+```
+
+Returns current price, daily change, volume. No ML — responds in under 1 second. Used by the screener page.
+
+Response:
+```json
+{
+  "name": "NVIDIA Corporation",
+  "price": 875.40,
+  "change_pct": 2.3,
+  "volume": 45234567,
+  "market_cap": 2150000000000,
+  "sector": "Technology"
+}
+```
+
+---
+
+### LSTM Available Tickers
+```
+GET /forecast/lstm/available
+```
+
+Response:
+```json
+{ "tickers": ["AAPL", "AMD", "AMZN", "GOOGL", "JPM", "META", "MSFT", "NFLX", "NVDA", "TSLA"] }
+```
+
+---
+
+## Analysis Endpoints
+
+### Technical + Fundamental Analysis
+```
+GET /analyze/{ticker}
+```
+
+Returns RSI, MACD, Bollinger Bands, moving averages, P/E, EPS, market cap, sector, and composite scores.
+
+---
+
+### News Sentiment
 ```
 GET /sentiment/{ticker}
 ```
 
-**Parameters:**
-- `ticker` (path) - Stock ticker symbol
-
-**Example Request:**
-```bash
-curl http://localhost:8000/sentiment/AAPL
-```
-
-**Response:**
+Response:
 ```json
 {
   "ticker": "AAPL",
-  "news": [
-    {
-      "headline": "Apple reports record earnings",
-      "url": "https://...",
-      "published": "2025-01-10T10:00:00Z",
-      "sentiment": "positive",
-      "score": 0.75
-    }
-  ],
+  "news": [{ "headline": "...", "url": "...", "published": "...", "sentiment": "positive", "score": 0.75 }],
   "avg_sentiment": 0.42
 }
+```
+
+---
+
+## Other Endpoints
+
+```
+GET  /trending              -> Trending tickers from Yahoo Finance
+GET  /prices?tickers=A,B,C  -> Batch current price + daily change
+POST /portfolio/analyze     -> Portfolio analysis
+GET  /health                -> Health check
 ```
 
 ---
@@ -121,48 +174,36 @@ curl http://localhost:8000/sentiment/AAPL
 ### StockInfo
 ```typescript
 {
-  name: string          // Company name
-  price: number | null  // Current price
-  change_pct: number    // 52-week change percentage
-  volume: number | null // Trading volume
-  market_cap: number | null // Market capitalization
-  sector: string        // Industry sector
+  name: string
+  price: number | null
+  change_pct: number        // daily % change
+  volume: number | null
+  market_cap: number | null
+  sector: string
+}
+```
+
+### ForecastPoint (Prophet)
+```typescript
+{
+  ds: string           // date YYYY-MM-DD
+  yhat: number
+  yhat_lower: number
+  yhat_upper: number
+  is_forecast: boolean
 }
 ```
 
 ### NewsItem
 ```typescript
 {
-  headline: string   // News headline
-  url: string       // Article URL
-  published: string // Publication date
+  headline: string
+  url: string
+  published: string
   sentiment: "positive" | "negative" | "neutral"
-  score: number     // Sentiment score (-1 to 1)
+  score: number        // -1 to 1
 }
 ```
-
-### ForecastPoint
-```typescript
-{
-  ds: string           // Date (YYYY-MM-DD)
-  yhat: number        // Predicted price
-  yhat_lower: number  // Lower confidence bound
-  yhat_upper: number  // Upper confidence bound
-  is_forecast: boolean // True if future prediction
-}
-```
-
----
-
-## Rate Limits
-
-### Free Tier (Development)
-- No rate limits on local development
-- yfinance may throttle after ~2000 requests/hour
-
-### Production Limits
-- Groq API: 14,400 requests/day
-- Recommend implementing caching for repeated queries
 
 ---
 
@@ -170,95 +211,31 @@ curl http://localhost:8000/sentiment/AAPL
 
 | Code | Description |
 |------|-------------|
-| 200  | Success |
-| 404  | Ticker not found |
-| 500  | Internal server error |
+| 200 | Success |
+| 400 | Bad request (e.g. ticker not supported by LSTM) |
+| 404 | Ticker not found |
+| 500 | Internal server error |
 
 ---
 
-## Testing Examples
+## Testing
 
-### Test with curl
 ```bash
 # Health check
 curl http://localhost:8000/health
 
-# Get forecast
-curl http://localhost:8000/forecast/NVDA
+# Blended forecast
+curl http://localhost:8000/forecast/NVDA/blended
 
-# Get sentiment only
-curl http://localhost:8000/sentiment/AAPL
+# Fast info
+curl http://localhost:8000/forecast/AAPL/info
+
+# LSTM only
+curl http://localhost:8000/forecast/TSLA/lstm
+
+# Available LSTM tickers
+curl http://localhost:8000/forecast/lstm/available
+
+# Interactive docs
+open http://localhost:8000/docs
 ```
-
-### Test with Python
-```python
-import requests
-
-# Get forecast
-response = requests.get("http://localhost:8000/forecast/NVDA")
-data = response.json()
-
-print(f"Current: ${data['info']['price']}")
-print(f"Forecast: ${data['forecast'][-1]['yhat']:.2f}")
-print(f"Explanation: {data['explanation']}")
-```
-
-### Test with JavaScript
-```javascript
-// Get forecast
-fetch('http://localhost:8000/forecast/NVDA')
-  .then(res => res.json())
-  .then(data => {
-    console.log(`Current: $${data.info.price}`)
-    console.log(`Forecast: $${data.forecast[data.forecast.length-1].yhat}`)
-    console.log(`Explanation: ${data.explanation}`)
-  })
-```
-
----
-
-## Common Issues
-
-### Ticker Not Found
-- Verify ticker symbol is correct
-- Use uppercase (NVDA not nvda)
-- Check if ticker exists on Yahoo Finance
-
-### Slow Response
-- Prophet model takes 2-5 seconds to train
-- First request may be slower
-- Consider implementing caching
-
-### Missing Data
-- Some tickers may have incomplete data
-- Check yfinance data availability
-- Try different time periods
-
----
-
-## Caching Strategy (Optional)
-
-To improve performance, cache responses:
-
-```python
-from functools import lru_cache
-from datetime import datetime, timedelta
-
-@lru_cache(maxsize=100)
-def get_cached_forecast(ticker: str, date: str):
-    # Only cache if date is today
-    if date == datetime.now().strftime("%Y-%m-%d"):
-        return fetch_forecast(ticker)
-    return None
-```
-
----
-
-## Future Enhancements
-
-Potential API additions:
-- `GET /compare/{ticker1}/{ticker2}` - Compare two stocks
-- `GET /portfolio` - Portfolio tracking
-- `POST /backtest` - Historical accuracy testing
-- `GET /alerts` - Price alert management
-- `GET /technical/{ticker}` - Technical indicators

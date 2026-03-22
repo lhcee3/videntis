@@ -24,6 +24,19 @@ Live: https://videntis.vercel.app
 
 ---
 
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 15, React 19, Tailwind CSS, Recharts |
+| Backend | FastAPI, Python 3.11 |
+| Forecasting | LSTM (TensorFlow/Keras) + Facebook Prophet |
+| Sentiment | VADER |
+| Auth / DB | Firebase (Firestore + Google Auth) |
+| Deployment | Vercel (frontend) + Railway (backend) |
+
+---
+
 ## Local Development
 
 ### Prerequisites
@@ -82,7 +95,7 @@ Frontend available at `http://localhost:3000`
 
 ---
 
-## API Reference
+## API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -100,28 +113,6 @@ Frontend available at `http://localhost:3000`
 
 ---
 
-## LSTM Models
-
-The models in `backend/videntis_models/models/` were trained using the notebook at `backend/LSTM_for_stocksense.ipynb` on Google Colab.
-
-Training data: Yahoo Finance daily close prices from 2018-01-01 to 2026-03-22 (2000+ trading days per ticker).
-
-Architecture per ticker:
-- LSTM layer — 128 units, returns sequences
-- Dropout 0.2
-- LSTM layer — 64 units
-- Dropout 0.2
-- Dense 32 (ReLU)
-- Dense 7 (output — 7-day forecast)
-
-Training config: 100 epochs max, early stopping (patience 10), Adam optimizer, MSE loss, batch size 32, 80/20 chronological train/test split.
-
-Each ticker has two saved files: `{TICKER}_lstm.h5` (model weights) and `{TICKER}_scaler.pkl` (MinMaxScaler fitted on training data).
-
-To retrain, open `backend/LSTM_for_stocksense.ipynb` in Google Colab, run all cells, then download the `models/` folder and replace `backend/videntis_models/models/`.
-
----
-
 ## Project Structure
 
 ```
@@ -129,14 +120,13 @@ videntis/
 ├── backend/
 │   ├── main.py
 │   ├── requirements.txt
-│   ├── LSTM_for_stocksense.ipynb   # Training notebook (Google Colab)
 │   ├── videntis_models/
 │   │   └── models/
 │   │       ├── AAPL_lstm.h5
 │   │       ├── AAPL_scaler.pkl
 │   │       └── ... (10 tickers)
 │   ├── routers/
-│   │   ├── forecast.py
+│   │   ├── forecast.py       # Prophet + LSTM + blended endpoints
 │   │   ├── analyze.py
 │   │   ├── sentiment.py
 │   │   ├── portfolio.py
@@ -145,10 +135,10 @@ videntis/
 │   └── services/
 │       ├── stock_data.py
 │       ├── prophet_model.py
-│       ├── lstm_model.py
+│       ├── lstm_model.py     # LSTM inference
 │       ├── technical.py
 │       ├── fundamentals.py
-│       ├── groq_explainer.py       # Rule-based, no API key needed
+│       ├── groq_explainer.py # Rule-based, no API key needed
 │       └── vader_sentiment.py
 └── frontend/
     ├── app/
@@ -179,6 +169,6 @@ videntis/
 
 - LSTM models are pre-trained and loaded at startup — no training on request
 - Prophet runs per request and takes 3-8 seconds
-- Blended endpoint uses LSTM 60% + Prophet 40% for supported tickers, falls back to Prophet-only for others
+- Blended endpoint uses LSTM 60% + Prophet 40% for supported tickers
 - No external LLM API required — explanations are rule-based
 - Firebase free tier: 50K reads/day, 20K writes/day

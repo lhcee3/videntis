@@ -1,155 +1,130 @@
 # Videntis Setup Guide
 
-## Quick Start (2-3 Weeks Build Timeline)
+## Backend Setup
 
-### Week 1: Backend + ML Pipeline
-
-#### Day 1-2: Backend Foundation
 ```bash
-cd Videntis/backend
+cd backend
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+venv\Scripts\activate       # Windows
+# source venv/bin/activate  # Mac/Linux
 pip install -r requirements.txt
-```
-
-Get Groq API key: https://console.groq.com (free, no credit card)
-Update `backend/.env` with your key
-
-Test the API:
-```bash
 uvicorn main:app --reload
-curl http://localhost:8000/health
-curl http://localhost:8000/forecast/NVDA
 ```
 
-#### Day 3-4: Test Each Service
-- Test `yfinance` data fetching
-- Verify Prophet forecast generation
-- Check VADER sentiment analysis
-- Test Groq LLM explanations
-
-### Week 2: Frontend + Design
-
-#### Day 1-2: Next.js Setup
+Test each service:
 ```bash
-cd Videntis/frontend
+curl http://localhost:8000/health
+curl http://localhost:8000/forecast/NVDA/blended
+curl http://localhost:8000/forecast/AAPL/info
+```
+
+No API keys required. The explainer is rule-based and the LSTM models are pre-trained files bundled in the repo.
+
+---
+
+## Frontend Setup
+
+```bash
+cd frontend
 npm install
 npm run dev
 ```
 
-Visit http://localhost:3000 to see the landing page
+Visit http://localhost:3000.
 
-#### Day 3-5: Build Components
-- Landing page with search
-- Dashboard with chart
-- LLM explanation card
-- News sentiment feed
+---
 
-Test with different tickers: NVDA, AAPL, TSLA, MSFT
+## Firebase Setup
 
-### Week 3: Firebase + Deployment
-
-#### Day 1-2: Firebase Setup
 1. Go to https://console.firebase.google.com
-2. Create project "Videntis"
+2. Create project
 3. Enable Firestore (test mode)
-4. Enable Authentication → Google provider
-5. Get config from Project Settings → Web app
-6. Update `frontend/.env.local`
+4. Enable Authentication > Google provider
+5. Project Settings > Web app > copy config into `frontend/.env.local`
 
-#### Day 3-4: Watchlist Feature
-- Test sign in with Google
-- Add/remove tickers from watchlist
-- View watchlist page
+Apply Firestore security rules from `docs/firestore.rules` when ready for production.
 
-#### Day 5-7: Deploy
-**Backend (Render.com):**
-- Create new Web Service
-- Connect GitHub repo
-- Root directory: `Videntis/backend`
-- Build command: `pip install -r requirements.txt`
-- Start command: `uvicorn main:app --host 0.0.0.0 --port 8000`
-- Add env var: `GROQ_API_KEY`
+---
 
-**Frontend (Vercel):**
-- Import GitHub repo
-- Root directory: `Videntis/frontend`
-- Framework: Next.js
-- Add all `NEXT_PUBLIC_*` env vars
-- Set `NEXT_PUBLIC_API_URL` to your Render backend URL
+## LSTM Models
 
-**Update CORS:**
-Edit `backend/main.py` and add your Vercel URL to `allow_origins`
+The pre-trained models live in `backend/videntis_models/models/`. Each ticker has two files:
+- `{TICKER}_lstm.h5` — Keras model weights
+- `{TICKER}_scaler.pkl` — MinMaxScaler fitted on training data
+
+Models are lazy-loaded on first request and cached in memory for subsequent calls.
+
+To retrain:
+1. Open `backend/LSTM_for_stocksense.ipynb` in Google Colab
+2. Run all cells (takes ~10-20 min on Colab GPU for all 10 tickers)
+3. Download the `models/` folder from Colab
+4. Replace `backend/videntis_models/models/` with the new files
+
+Training config used:
+- Data: 2018-01-01 to present, Yahoo Finance daily close
+- Lookback: 60 days
+- Forecast horizon: 7 days
+- Architecture: LSTM(128) > Dropout(0.2) > LSTM(64) > Dropout(0.2) > Dense(32) > Dense(7)
+- Optimizer: Adam, Loss: MSE
+- Early stopping: patience 10
+
+---
+
+## Deployment
+
+### Backend — Railway
+
+1. Push repo to GitHub
+2. Create new Railway project > Deploy from GitHub
+3. Set root directory to `backend`
+4. Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+5. No environment variables required (no external API keys)
+6. Copy the Railway public URL
+
+### Frontend — Vercel
+
+1. Import GitHub repo to Vercel
+2. Set root directory to `frontend`
+3. Framework: Next.js
+4. Add environment variables:
+   - `NEXT_PUBLIC_API_URL` = your Railway backend URL
+   - All `NEXT_PUBLIC_FIREBASE_*` values
+5. Deploy
+
+### Update CORS
+
+In `backend/main.py`, add your Vercel URL to `allow_origins`.
+
+---
 
 ## Common Issues
 
-### Prophet Installation Fails
-Prophet requires C++ compiler. On Windows, install Visual Studio Build Tools.
-Alternative: Use Docker setup
+### Prophet installation fails
+Windows requires Visual Studio Build Tools. Alternative: use the Docker setup via `docker-compose.yml`.
 
-### yfinance Rate Limits
-Add `time.sleep(1)` between bulk requests
+### yfinance rate limits
+Add `time.sleep(0.5)` between bulk requests if hitting throttling.
 
-### Firebase Auth Not Working
-- Check all env vars are set correctly
-- Verify Firebase project has Google auth enabled
-- Check browser console for errors
+### LSTM model load error
+Verify TensorFlow version matches what was used to train. The notebook uses TensorFlow 2.19. Check `requirements.txt`.
 
-### Chart Not Rendering
-- Ensure "use client" is at top of ForecastChart.tsx
-- Check that data is being passed correctly
-- Verify Recharts is installed
+### Chart not rendering
+Ensure `"use client"` is at the top of any component using Recharts.
+
+---
 
 ## Testing Checklist
 
 - [ ] Backend health endpoint responds
-- [ ] Can fetch forecast for NVDA
-- [ ] Prophet generates 7-day forecast
-- [ ] Groq LLM returns explanation
-- [ ] News sentiment loads
+- [ ] `/forecast/NVDA/blended` returns data with `model: "lstm+prophet"`
+- [ ] `/forecast/NVDA/info` responds in under 1 second
 - [ ] Frontend landing page loads
 - [ ] Search redirects to dashboard
-- [ ] Chart displays historical + forecast
+- [ ] Chart shows historical + forecast with confidence bands
+- [ ] Model badge shows on chart
 - [ ] Can sign in with Google
 - [ ] Can add ticker to watchlist
 - [ ] Watchlist page shows saved tickers
-
-## Resume Metrics to Track
-
-Add these to your project:
-
-1. **Forecast Accuracy (MAPE)**
-   - Compare predicted vs actual prices weekly
-   - Target: <5% MAPE
-
-2. **LLM Response Time**
-   - Log Groq API latency
-   - Target: <1 second average
-
-3. **User Engagement**
-   - Unique tickers queried
-   - Watchlist adoption rate
-   - Daily active users
-
-4. **System Performance**
-   - API response time
-   - Chart render time
-   - Error rate
-
-## Next Steps After MVP
-
-1. Add more ML models (LSTM, ARIMA)
-2. Compare model accuracy
-3. Add technical indicators (RSI, MACD)
-4. Email alerts for watchlist
-5. Portfolio tracking
-6. Mobile responsive improvements
-7. Dark/light theme toggle
-8. Export predictions to CSV
-
-## Support
-
-- Groq API docs: https://console.groq.com/docs
-- Firebase docs: https://firebase.google.com/docs
-- Prophet docs: https://facebook.github.io/prophet/
-- Next.js docs: https://nextjs.org/docs
+- [ ] Screener page shows prices for all cards
+- [ ] Portfolio page loads
+- [ ] Risk calculator computes live
