@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect, useState, use } from "react"
 import { fetchAnalysis } from "@/lib/api"
 import TechnicalIndicators from "@/components/TechnicalIndicators"
 import FundamentalsCard from "@/components/FundamentalsCard"
@@ -19,8 +19,9 @@ function Loader({ ticker }: { ticker: string }) {
   )
 }
 
-export default function AnalyzePage({ params }: { params: { ticker: string } }) {
-  const ticker = params.ticker.toUpperCase()
+export default function AnalyzePage({ params }: { params: Promise<{ ticker: string }> }) {
+  const { ticker: rawTicker } = use(params)
+  const ticker = rawTicker.toUpperCase()
   const [data, setData] = useState<any>(null)
   const [error, setError] = useState("")
 

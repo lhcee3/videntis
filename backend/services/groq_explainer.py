@@ -1,12 +1,3 @@
-import os
-import requests
-from dotenv import load_dotenv
-
-load_dotenv()
-
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
-
 def explain_forecast(
     ticker: str,
     current_price: float,
@@ -15,39 +6,53 @@ def explain_forecast(
     avg_sentiment: float,
     sector: str = ""
 ) -> str:
+    """
+    Rule-based forecast explanation — no external API, no rate limits.
+    """
+    if current_price <= 0:
+        return f"{ticker} forecast data is unavailable at this time."
+
     change_pct = ((forecast_price - current_price) / current_price) * 100
-    direction = "rise" if change_pct > 0 else "fall"
+    change_dir = "rise" if change_pct > 0 else "fall"
+    abs_change = abs(change_pct)
+
     sentiment_label = (
         "positive" if avg_sentiment > 0.05
         else "negative" if avg_sentiment < -0.05
         else "neutral"
     )
 
-    prompt = f"""You are a financial analyst explaining a stock forecast to a retail investor.
-Be clear, friendly, and avoid heavy jargon.
+    # Magnitude descriptor
+    if abs_change < 1:
+        magnitude = "marginally"
+    elif abs_change < 3:
+        magnitude = "moderately"
+    elif abs_change < 6:
+        magnitude = "notably"
+    else:
+        magnitude = "significantly"
 
-Stock: {ticker} ({sector})
-Current Price: ${current_price:.2f}
-7-Day Forecast: ${forecast_price:.2f} ({change_pct:+.1f}%)
-Volume vs 30-day avg: {volume_change_pct:+.1f}%
-News Sentiment: {sentiment_label} ({avg_sentiment:.2f} on a -1 to +1 scale)
+    # Volume signal
+    if volume_change_pct > 20:
+        vol_signal = f"with above-average trading volume ({volume_change_pct:+.0f}% vs 30-day avg) suggesting strong conviction"
+    elif volume_change_pct < -20:
+        vol_signal = f"though below-average volume ({volume_change_pct:+.0f}% vs 30-day avg) indicates limited participation"
+    else:
+        vol_signal = "with volume in line with recent averages"
 
-Write exactly 2-3 sentences explaining why {ticker} is predicted to {direction} {abs(change_pct):.1f}% over the next 7 days. Mention the specific price target, one key signal (volume or sentiment), and add a brief uncertainty caveat. Keep it under 75 words. Do not use bullet points."""
+    # Sentiment signal
+    sentiment_note = (
+        f"News sentiment is {sentiment_label}, which supports the {change_dir}ward outlook."
+        if sentiment_label != "neutral"
+        else "News sentiment is broadly neutral with no major catalysts identified."
+    )
 
-    try:
-        resp = requests.post(
-            f"{GEMINI_URL}?key={GEMINI_API_KEY}",
-            json={"contents": [{"parts": [{"text": prompt}]}]},
-            timeout=15,
-        )
-        resp.raise_for_status()
-        return resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
-    except Exception as e:
-        # Fallback — never crash the whole forecast
-        change_dir = "increase" if change_pct > 0 else "decrease"
-        return (
-            f"{ticker} is forecast to {change_dir} {abs(change_pct):.1f}% over the next 7 days, "
-            f"reaching a target of ${forecast_price:.2f}. "
-            f"News sentiment is {sentiment_label} and volume is {volume_change_pct:+.1f}% vs the 30-day average. "
-            f"As always, forecasts carry uncertainty and past performance may not predict future results."
-        )
+    sector_note = f" in the {sector} sector" if sector else ""
+
+    return (
+        f"{ticker}{sector_note} is forecast to {change_dir} {magnitude} by {abs_change:.1f}% "
+        f"over the next 7 days, targeting ${forecast_price:.2f} from the current ${current_price:.2f}, "
+        f"{vol_signal}. "
+        f"{sentiment_note} "
+        f"As with all model-based forecasts, actual results may differ — use this as one signal among many."
+    )

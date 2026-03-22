@@ -100,8 +100,8 @@ export default function HomePage() {
   const [tapeItems, setTapeItems] = useState<TapeItem[]>([])
   const router = useRouter()
   const { user } = useAuth()
-  const debounceRef = useRef<NodeJS.Timeout>()
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const debounceRef = useRef<NodeJS.Timeout | undefined>(undefined)
+  const wrapperRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/prices?tickers=${TAPE_TICKERS.join(",")}`)
@@ -212,7 +212,7 @@ export default function HomePage() {
             <AnimatedWord word="MARKET" delay={0} />
           </h1>
           <h1 className="font-display text-7xl md:text-8xl mb-6 leading-none">
-            <AnimatedWord word="INTELLIGENCE." delay={150} />
+            <AnimatedWord word="INTEL." delay={150} />
           </h1>
           <p className="text-lg text-[#9ca3af] mb-10" style={{ opacity: 0, animation: "fadeUp 0.7s ease 0.45s forwards" }}>
             Neural Forecasts for the Next 7 Days.

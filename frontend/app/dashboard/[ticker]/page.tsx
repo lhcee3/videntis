@@ -6,10 +6,11 @@ import NewsSentiment from "@/components/NewsSentiment"
 import WatchlistButton from "@/components/WatchlistButton"
 import Link from "next/link"
 
-export default async function DashboardPage({ params }: { params: { ticker: string } }) {
+export default async function DashboardPage({ params }: { params: Promise<{ ticker: string }> }) {
+  const { ticker } = await params
   let data
   try {
-    data = await fetchForecast(params.ticker)
+    data = await fetchForecast(ticker)
   } catch (error: any) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -64,6 +65,9 @@ export default async function DashboardPage({ params }: { params: { ticker: stri
             <ForecastChart
               historical={data.historical}
               forecast={data.forecast}
+              confidenceBands={data.confidence_bands}
+              forecastPrices={data.forecast_prices}
+              model={data.model}
             />
             
             <LLMExplainer

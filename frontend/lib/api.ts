@@ -10,7 +10,8 @@ async function apiFetch(path: string, options?: RequestInit) {
 }
 
 export const fetchForecast = (ticker: string) =>
-  apiFetch(`/forecast/${ticker}`, { next: { revalidate: 300 } } as any)
+  apiFetch(`/forecast/${ticker}/blended`, { next: { revalidate: 300 } } as any)
+    .catch(() => apiFetch(`/forecast/${ticker}`, { next: { revalidate: 300 } } as any))
 
 export const fetchAnalysis = (ticker: string) =>
   apiFetch(`/analyze/${ticker}`)
