@@ -20,7 +20,7 @@
               | REST API                         | Firebase SDK
               v                                  v
 +-----------------------------+    +----------------------------+
-|   FASTAPI BACKEND (Railway) |    |   FIREBASE                 |
+|   FASTAPI BACKEND (Render)  |    |   FIREBASE                 |
 |                             |    |   - Auth (Google OAuth)    |
 |  /forecast/{ticker}         |    |   - Firestore              |
 |  /forecast/{ticker}/blended |    |     users/watchlist        |
@@ -29,16 +29,28 @@
 |  /analyze/{ticker}          |
 |  /sentiment/{ticker}        |
 |  /portfolio/analyze         |
+|  /prices                    |
+|  /trending                  |
 +----------+------------------+
+           |
+           +----------+----------+----------+----------+
+           |          |          |          |          |
+           v          v          v          v          v
++----------+  +-------+---+  +--+-------+  +-+------+  +----------+
+| YAHOO    |  | FINNHUB   |  | ALPHA    |  | SEC    |  | AKSHARE  |
+| FINANCE  |  | (fallback |  | VANTAGE  |  | EDGAR  |  | macro /  |
+| primary  |  |  tier 1)  |  | fallback |  | XBRL   |  | global   |
++----------+  +-----------+  | tier 2)  |  | fund.  |  | data     |
+                             +----------+  +--------+  +----------+
            |
            +------------------+------------------+
            |                  |                  |
            v                  v                  v
 +----------------+  +------------------+  +------------------+
-|  YAHOO FINANCE |  |  PROPHET MODEL   |  |  LSTM MODELS     |
-|  (yfinance)    |  |  per-request     |  |  pre-trained     |
-|  - prices      |  |  3-8s            |  |  10 tickers      |
-|  - news RSS    |  |  7-day forecast  |  |  <1s inference   |
+|  PROPHET MODEL |  |  LSTM MODELS     |  |  GEMINI 2.0      |
+|  per-request   |  |  pre-trained     |  |  FLASH           |
+|  3-8s          |  |  10 tickers      |  |  portfolio AI    |
+|  7-day forecast|  |  <1s inference   |  |  summary         |
 +----------------+  +------------------+  +------------------+
            |
            v
@@ -122,21 +134,24 @@ Runtime inference:
 
 ```
 routers/
-  forecast.py    -> /forecast/* endpoints
-  analyze.py     -> /analyze/{ticker}
+  forecast.py    -> /forecast/* endpoints (Prophet, LSTM, blended)
+  analyze.py     -> /analyze/{ticker} (technicals + fundamentals + scores)
   sentiment.py   -> /sentiment/{ticker}
-  portfolio.py   -> /portfolio/analyze
+  portfolio.py   -> /portfolio/analyze (Gemini AI summary)
   trending.py    -> /trending
-  prices.py      -> /prices
+  prices.py      -> /prices (batch)
 
 services/
-  stock_data.py      -> yfinance wrapper
-  prophet_model.py   -> Prophet forecasting
-  lstm_model.py      -> LSTM inference (lazy-loads models)
-  groq_explainer.py  -> Rule-based text generation
-  technical.py       -> RSI, MACD, Bollinger Bands
-  fundamentals.py    -> P/E, EPS, market cap
-  vader_sentiment.py -> News sentiment scoring
+  stock_data.py        -> Yahoo Finance primary + Finnhub + Alpha Vantage fallback chain
+  prophet_model.py     -> Prophet forecasting
+  lstm_model.py        -> LSTM inference (lazy-loads models at first request)
+  groq_explainer.py    -> Rule-based text generation (no API key)
+  technical.py         -> RSI, MACD, Bollinger Bands (pandas-ta with manual fallback)
+  fundamentals.py      -> Yahoo Finance enriched with SEC EDGAR XBRL
+  vader_sentiment.py   -> News sentiment scoring
+  cache_manager.py     -> Per-type TTL caches (price/technical/fundamentals/forecast)
+  cache_warmer.py      -> Background scheduler, warms cache every 5 minutes
+  alternative_data.py  -> AKShare macro/global market data (feature-flagged)
 ```
 
 ## Database Schema
@@ -158,7 +173,7 @@ firestore/
 
 ```
 Frontend  -> Vercel (Next.js 15, auto-deploy from Git)
-Backend   -> Railway (FastAPI, LSTM models bundled in repo)
+Backend   -> Render (FastAPI, Python 3.11.9, LSTM models bundled in repo)
 Auth/DB   -> Firebase (Firestore + Google Auth)
 ```
 

@@ -72,14 +72,24 @@ Training config used:
 
 ## Deployment
 
-### Backend — Railway
+### Backend — Render
 
 1. Push repo to GitHub
-2. Create new Railway project > Deploy from GitHub
+2. Create new Render Web Service > connect GitHub repo
 3. Set root directory to `backend`
-4. Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-5. No environment variables required (no external API keys)
-6. Copy the Railway public URL
+4. Build command: `pip install -r requirements.txt`
+5. Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+6. Add environment variables in the Render dashboard:
+   - `FINNHUB_API_KEY`
+   - `ALPHA_VANTAGE_API_KEY`
+   - `GEMINI_API_KEY`
+   - `SEC_EMAIL`
+   - `ENABLE_CACHE=true`
+   - `ENABLE_FALLBACK_SOURCES=true`
+   - `ENABLE_SEC_EDGAR=true`
+   - `ENABLE_AKSHARE=true`
+   - `PYTHON_VERSION=3.11.9` (or rely on `runtime.txt` which already pins this)
+7. Copy the Render public URL
 
 ### Frontend — Vercel
 

@@ -12,15 +12,17 @@ Live: https://videntis.vercel.app
 - Yahoo Finance autocomplete search
 - 7-day blended forecast — LSTM (60%) + Prophet (40%) with confidence bands
 - Trained LSTM models for 10 stocks: AAPL, AMD, AMZN, GOOGL, JPM, META, MSFT, NFLX, NVDA, TSLA
-- Deep analysis: RSI, MACD, Bollinger Bands, moving averages
-- Fundamentals: P/E, EPS, market cap, sector
+- 3-tier data fallback: Yahoo Finance → Finnhub → Alpha Vantage
+- Deep analysis: RSI, MACD, Bollinger Bands, moving averages (pandas-ta with manual fallback)
+- Fundamentals from Yahoo Finance enriched with SEC EDGAR XBRL data
 - Rule-based AI explanations — no external LLM, no rate limits
 - News sentiment scoring via VADER
-- Portfolio tracker with AI analysis
+- Portfolio tracker with Gemini AI analysis
 - Watchlist with Firebase persistence
 - Risk management calculator — position sizer and R:R planner
 - Market open/closed indicator (ET timezone)
 - Google Sign-In
+- Per-type TTL caching (price 60s, technical 5min, fundamentals 24h, forecast 1h)
 
 ---
 
@@ -42,9 +44,12 @@ venv\Scripts\activate        # Windows
 pip install -r requirements.txt
 ```
 
-Create `backend/.env`:
+Copy `backend/.env.example` to `backend/.env.local` and fill in your keys:
 ```
-# No external API keys required
+FINNHUB_API_KEY=your_key
+ALPHA_VANTAGE_API_KEY=your_key
+GEMINI_API_KEY=your_key
+SEC_EMAIL=your@email.com
 ```
 
 Start the server:
@@ -52,8 +57,7 @@ Start the server:
 uvicorn main:app --reload
 ```
 
-API available at `http://localhost:8000`
-Interactive docs at `http://localhost:8000/docs`
+API at `http://localhost:8000` — interactive docs at `http://localhost:8000/docs`
 
 ### Frontend
 
@@ -73,52 +77,30 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
 NEXT_PUBLIC_FIREBASE_APP_ID=...
 ```
 
-Start the dev server:
 ```bash
 npm run dev
 ```
 
-Frontend available at `http://localhost:3000`
-
----
-
-## API Reference
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/health` | Health check |
-| GET | `/forecast/{ticker}` | Prophet forecast + news + explanation |
-| GET | `/forecast/{ticker}/lstm` | Pure LSTM forecast (10 supported tickers) |
-| GET | `/forecast/{ticker}/blended` | LSTM + Prophet blended forecast |
-| GET | `/forecast/{ticker}/info` | Fast stock info (price, change, volume) |
-| GET | `/forecast/lstm/available` | List LSTM-supported tickers |
-| GET | `/analyze/{ticker}` | Technical indicators, fundamentals, scores |
-| GET | `/sentiment/{ticker}` | News sentiment |
-| GET | `/trending` | Trending tickers |
-| GET | `/prices?tickers=A,B` | Batch price fetch |
-| POST | `/portfolio/analyze` | Portfolio analysis |
+Frontend at `http://localhost:3000`
 
 ---
 
 ## LSTM Models
 
-The models in `backend/videntis_models/models/` were trained using the notebook at `backend/LSTM_for_stocksense.ipynb` on Google Colab.
+The models in `backend/videntis_models/models/` were trained using `backend/LSTM_for_stocksense.ipynb` on Google Colab.
 
-Training data: Yahoo Finance daily close prices from 2018-01-01 to 2026-03-22 (2000+ trading days per ticker).
+Training data: Yahoo Finance daily close prices from 2018-01-01 to 2026-03-22 (~2000 trading days per ticker).
 
 Architecture per ticker:
-- LSTM layer — 128 units, returns sequences
-- Dropout 0.2
-- LSTM layer — 64 units
-- Dropout 0.2
-- Dense 32 (ReLU)
-- Dense 7 (output — 7-day forecast)
+- LSTM(128, return_sequences=True) → Dropout(0.2)
+- LSTM(64) → Dropout(0.2)
+- Dense(32, ReLU) → Dense(7)
 
-Training config: 100 epochs max, early stopping (patience 10), Adam optimizer, MSE loss, batch size 32, 80/20 chronological train/test split.
+Training config: 100 epochs max, early stopping (patience 10), Adam, MSE loss, batch 32, 80/20 chronological split.
 
-Each ticker has two saved files: `{TICKER}_lstm.h5` (model weights) and `{TICKER}_scaler.pkl` (MinMaxScaler fitted on training data).
+Each ticker has two files: `{TICKER}_lstm.h5` and `{TICKER}_scaler.pkl`.
 
-To retrain, open `backend/LSTM_for_stocksense.ipynb` in Google Colab, run all cells, then download the `models/` folder and replace `backend/videntis_models/models/`.
+To retrain: open the notebook in Google Colab, run all cells, download the `models/` folder, replace `backend/videntis_models/models/`.
 
 ---
 
@@ -129,27 +111,28 @@ videntis/
 ├── backend/
 │   ├── main.py
 │   ├── requirements.txt
-│   ├── LSTM_for_stocksense.ipynb   # Training notebook (Google Colab)
+│   ├── runtime.txt                     # Python 3.11.9
+│   ├── LSTM_for_stocksense.ipynb       # Training notebook
 │   ├── videntis_models/
-│   │   └── models/
-│   │       ├── AAPL_lstm.h5
-│   │       ├── AAPL_scaler.pkl
-│   │       └── ... (10 tickers)
+│   │   └── models/                     # .h5 + .pkl per ticker
 │   ├── routers/
-│   │   ├── forecast.py
-│   │   ├── analyze.py
+│   │   ├── forecast.py                 # Prophet, LSTM, blended
+│   │   ├── analyze.py                  # Full analysis + scores
 │   │   ├── sentiment.py
-│   │   ├── portfolio.py
+│   │   ├── portfolio.py                # Gemini AI analysis
 │   │   ├── trending.py
 │   │   └── prices.py
 │   └── services/
-│       ├── stock_data.py
+│       ├── stock_data.py               # Yahoo + Finnhub + Alpha Vantage fallback
 │       ├── prophet_model.py
 │       ├── lstm_model.py
-│       ├── technical.py
-│       ├── fundamentals.py
-│       ├── groq_explainer.py       # Rule-based, no API key needed
-│       └── vader_sentiment.py
+│       ├── technical.py                # pandas-ta with manual fallback
+│       ├── fundamentals.py             # Yahoo + SEC EDGAR XBRL
+│       ├── groq_explainer.py           # Rule-based, no API key
+│       ├── vader_sentiment.py
+│       ├── cache_manager.py            # Per-type TTL caches
+│       ├── cache_warmer.py
+│       └── alternative_data.py         # AKShare macro data
 └── frontend/
     ├── app/
     │   ├── page.tsx
@@ -160,14 +143,6 @@ videntis/
     │   ├── watchlist/
     │   └── tools/
     ├── components/
-    │   ├── ForecastChart.tsx
-    │   ├── TechnicalIndicators.tsx
-    │   ├── FundamentalsCard.tsx
-    │   ├── RiskCalculator.tsx
-    │   ├── AIChat.tsx
-    │   ├── NewsSentiment.tsx
-    │   ├── WatchlistButton.tsx
-    │   └── portfolio/
     └── lib/
         ├── api.ts
         └── firebase.ts
@@ -178,7 +153,9 @@ videntis/
 ## Notes
 
 - LSTM models are pre-trained and loaded at startup — no training on request
-- Prophet runs per request and takes 3-8 seconds
-- Blended endpoint uses LSTM 60% + Prophet 40% for supported tickers, falls back to Prophet-only for others
-- No external LLM API required — explanations are rule-based
+- Prophet runs per request, takes 3-8 seconds
+- Blended endpoint: LSTM 60% + Prophet 40% for supported tickers, Prophet-only fallback for others
+- Data fallback chain activates automatically — no manual intervention needed
+- SEC EDGAR enrichment is additive — only fills fields Yahoo left empty
+- AKShare macro data is feature-flagged via `ENABLE_AKSHARE`
 - Firebase free tier: 50K reads/day, 20K writes/day

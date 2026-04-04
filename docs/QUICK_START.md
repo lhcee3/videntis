@@ -23,10 +23,15 @@ Get up and running in under 10 minutes.
 
 ### Backend
 
-`backend/.env` — no API keys required:
+Copy `backend/.env.example` to `backend/.env.local` and fill in your keys:
 ```
-# empty or leave as-is
+FINNHUB_API_KEY=your_key
+ALPHA_VANTAGE_API_KEY=your_key
+GEMINI_API_KEY=your_key
+SEC_EMAIL=your@email.com
 ```
+
+All other variables have sensible defaults — see `backend/.env.example` for the full list.
 
 ### Frontend
 
