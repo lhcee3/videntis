@@ -1,6 +1,85 @@
-import yfinance as yf
+import os
+import logging
+from typing import Optional, Dict, Any
 
-def get_fundamentals(ticker: str) -> dict:
+import yfinance as yf
+import requests as req
+
+from services import cache_manager as cache
+
+logger = logging.getLogger(__name__)
+
+SEC_EMAIL      = os.getenv("SEC_EMAIL", "videntis@example.com")
+ENABLE_SEC     = os.getenv("ENABLE_SEC_EDGAR", "true").lower() == "true"
+EDGAR_BASE     = "https://data.sec.gov"
+EDGAR_HEADERS  = {"User-Agent": f"Videntis {SEC_EMAIL}"}
+
+# CIK lookup cache (in-memory, permanent — CIKs don't change)
+_cik_cache: dict = {}
+
+
+def _get_cik(ticker: str) -> Optional[str]:
+    if ticker in _cik_cache:
+        return _cik_cache[ticker]
+    try:
+        url = f"{EDGAR_BASE}/submissions/CIK{ticker}.json"
+        # EDGAR uses zero-padded 10-digit CIKs — use the tickers.json lookup instead
+        tickers_url = "https://www.sec.gov/files/company_tickers.json"
+        data = req.get(tickers_url, headers=EDGAR_HEADERS, timeout=10).json()
+        for entry in data.values():
+            if entry.get("ticker", "").upper() == ticker.upper():
+                cik = str(entry["cik_str"]).zfill(10)
+                _cik_cache[ticker] = cik
+                return cik
+    except Exception as e:
+        logger.warning(f"CIK lookup failed for {ticker}: {e}")
+    return None
+
+
+def _get_fundamentals_sec(ticker: str) -> Optional[Dict[str, Any]]:
+    """Fetch key financials from SEC EDGAR XBRL API."""
+    if not ENABLE_SEC:
+        return None
+    try:
+        cik = _get_cik(ticker)
+        if not cik:
+            return None
+
+        url = f"{EDGAR_BASE}/api/xbrl/companyfacts/CIK{cik}.json"
+        data = req.get(url, headers=EDGAR_HEADERS, timeout=15).json()
+        facts = data.get("facts", {}).get("us-gaap", {})
+
+        def _latest(concept: str) -> Optional[float]:
+            entries = facts.get(concept, {}).get("units", {}).get("USD", [])
+            # Filter to annual (10-K) filings, take most recent
+            annual = [e for e in entries if e.get("form") in ("10-K", "20-F") and e.get("val") is not None]
+            if not annual:
+                return None
+            return annual[-1]["val"]
+
+        net_income = _latest("NetIncomeLoss")
+        revenue    = _latest("Revenues") or _latest("RevenueFromContractWithCustomerExcludingAssessedTax")
+        shares     = _latest("CommonStockSharesOutstanding")
+        total_debt = _latest("LongTermDebt")
+        total_cash = _latest("CashAndCashEquivalentsAtCarryingValue")
+
+        eps = round(net_income / shares, 2) if net_income and shares else None
+
+        return {
+            "_source": "sec_edgar",
+            "eps_sec": eps,
+            "revenue_sec": revenue,
+            "net_income_sec": net_income,
+            "shares_outstanding": shares,
+            "total_debt_sec": total_debt,
+            "total_cash_sec": total_cash,
+        }
+    except Exception as e:
+        logger.warning(f"SEC EDGAR fetch failed for {ticker}: {e}")
+        return None
+
+
+def _get_fundamentals_yahoo(ticker: str) -> dict:
     stock = yf.Ticker(ticker)
     info = stock.info
 
@@ -19,7 +98,6 @@ def get_fundamentals(ticker: str) -> dict:
     total_cash = info.get("totalCash")
     total_debt = info.get("totalDebt")
 
-    # Fundamental score (0-10)
     score = 5.0
     if pe and pe < 20: score += 1.0
     elif pe and pe > 40: score -= 1.0
@@ -55,3 +133,29 @@ def get_fundamentals(ticker: str) -> dict:
         "employees": info.get("fullTimeEmployees"),
         "country": info.get("country", ""),
     }
+
+
+def get_fundamentals(ticker: str) -> dict:
+    """Returns Yahoo fundamentals enriched with SEC EDGAR data where available."""
+    cached = cache.get_fundamentals(f"fund_{ticker}")
+    if cached is not None:
+        return cached
+
+    result = _get_fundamentals_yahoo(ticker)
+
+    # Enrich with SEC data (additive — never overwrites existing fields)
+    sec_data = _get_fundamentals_sec(ticker)
+    if sec_data:
+        # Only fill in fields that Yahoo left empty
+        if not result.get("eps") and sec_data.get("eps_sec"):
+            result["eps"] = sec_data["eps_sec"]
+        if not result.get("total_cash") and sec_data.get("total_cash_sec"):
+            result["total_cash"] = sec_data["total_cash_sec"]
+        if not result.get("total_debt") and sec_data.get("total_debt_sec"):
+            result["total_debt"] = sec_data["total_debt_sec"]
+        # Attach raw SEC fields as bonus data
+        result["sec_revenue"] = sec_data.get("revenue_sec")
+        result["sec_net_income"] = sec_data.get("net_income_sec")
+
+    cache.set_fundamentals(f"fund_{ticker}", result)
+    return result

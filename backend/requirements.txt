@@ -9,6 +9,10 @@ python-dotenv
 feedparser
 pandas
 requests
-tensorflow==2.15.0
+tensorflow==2.16.1
 scikit-learn
 numpy
+cachetools
+apscheduler
+pytz
+aiohttp
